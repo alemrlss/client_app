@@ -1,184 +1,101 @@
-"use client"
+"use client";
 import React, { useState } from "react";
-import {
-    BsBoxArrowLeft,
-    BsBoxArrowRight,
-    BsFillHouseLockFill,
-    BsFillHousesFill,
-} from "react-icons/bs";
-import {
-    FaWarehouse,
-    FaHospital,
-    FaTags,
-    FaMapMarkedAlt,
-    FaBriefcaseMedical,
-    FaUsers,
-    FaFileAlt,
-} from "react-icons/fa";
 import { Josefin_Sans } from "next/font/google";
+import { BsBoxArrowRight } from "react-icons/bs";
+import { MdClose } from "react-icons/md";
+import sidebarSections from "@/data/sidebarSections";
 
-const josefin_sans = Josefin_Sans({  //Fuente de google fonts configurando
-    weight: ["400"],
-    subsets: ["latin"],
+const josefin_sans = Josefin_Sans({
+  //Fuente de google fonts configuracion
+  weight: ["400"],
+  subsets: ["latin"],
 });
+import Image from "next/image";
+import profileDefault from "@/public/images/sidebar/default-profile.png";
 
-const Sidebar: React.FC = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    const [activeSection, setActiveSection] = useState("inicio");
+const Sidebar = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [activeSection, setActiveSection] = useState("inicio");
 
-    const toggleSidebar = () => {           //Funcion para abrir y cerrar el sidebar
-        setIsSidebarOpen(!isSidebarOpen);
-    };
+  //Funcion para abrir y cerrar el sidebar
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+  //Funcion manejedaora para cambiar de seccion
+  const handleSectionClick = (sectionId: string) => {
+    setActiveSection(sectionId);
+  };
 
-    const handleSectionClick = (sectionName: string) => { //Funcion manejedaora para cambiar de seccion
-        setActiveSection(sectionName);
-    };
+  const activeColor = "text-color3 bg-slate-100 rounded-md";
+  const hoverActiveColor = ""; // Color de hover para secciones activas
+  const hoverInactiveColor = "hover:text-color5"; // Color de hover para secciones inactivas
 
-    const activeColor = "text-color3 bg-slate-100 rounded-md";
-    const hoverActiveColor = ""; // Color de hover para secciones activas
-    const hoverInactiveColor = "hover:text-color5"; // Color de hover para secciones inactivas
-
-    return (
-        <aside
-            className={`bg-color3 text-white ${isSidebarOpen ? "w-72" : "w-20"
-                } transition-all duration-300 ease-in-out`}
+  return (
+    <aside
+      className={`bg-color3 text-white ${isSidebarOpen ? "w-72" : "w-20"
+        } transition-all duration-300 ease-in-out relative`}
+    >
+      {isSidebarOpen && (
+        <button
+          onClick={toggleSidebar}
+          className="absolute top-0 right-0 mt-2 mr-2 text-white"
         >
+          <MdClose className=" font-bold text-2xl" />
+        </button>
+      )}
+      {isSidebarOpen && (
+        <div
+          className={`${josefin_sans.className}  flex justify-center items-center border-b border-gray-500`}
+        >
+          <div className="flex flex-col items-center justify-center">
+            <Image
+              className=""
+              src={profileDefault}
+              alt="Logo de la empresa"
+              width={140}
+              height={140}
+            />
+            <p className="text-center text-sm">Gerente</p>
+            <p className="text-center text-base pb-1">Jissel Ortega</p>
+          </div>
+        </div>
+      )}
+      {!isSidebarOpen && (
+        <div className="flex justify-center py-1 border-b border-gray-500">
+          <button onClick={toggleSidebar} className="">
+            <BsBoxArrowRight className="text-4xl text-white" />
+          </button>
+        </div>
+      )}
+      <ul
+        className={`my-4 space-y-2 flex flex-col ${isSidebarOpen ? `justify-start` : `justify-center items-center`
+          }`}
+      >
+        {sidebarSections.map((section) => (
+          <li
+            key={section.id}
+            className={`mx-2 p-2 text-lg font-semibold cursor-pointer 
+                    flex ${activeSection === section.id
+                ? `${activeColor} ${hoverActiveColor}`
+                : hoverInactiveColor
+              }`}
+            onClick={() => {
+              handleSectionClick(section.id);
+            }}
+          >
+            <span className="flex items-center">
+              {React.createElement(section.icon, { className: "h-6 w-6" })}
+            </span>
             {isSidebarOpen && (
-                <div className={`${josefin_sans.className} py-6 px-4 flex bg-blue-900`}>
-                    <h2 className="text-center text-xl border-b border-white">ADMINISTRACION VENSALUD</h2>
-
-                    <BsBoxArrowLeft onClick={toggleSidebar}
-                        className="text-5xl cursor-pointer text-white" />
-                </div>
+              <span className="ml-2 text-lg font-semibold">
+                {section.title}
+              </span>
             )}
-
-            {!isSidebarOpen && (
-                <div className="flex justify-end pr-2  border-white border-opacity-10 bg-blue-900">
-                    <button
-                        onClick={toggleSidebar}
-                        className=""
-                    >
-                        <BsBoxArrowRight className="text-5xl text-white" />
-                    </button>
-                </div>
-            )}
-
-            <ul className="ml-2 my-4 space-y-4 flex flex-col justify-start">
-                <li>
-                    <div
-                        className={`mx-2 p-2 text-lg font-semibold cursor-pointer flex ${activeSection === "inicio"
-                            ? `${activeColor} ${hoverActiveColor}`
-                            : hoverInactiveColor
-                            }`}
-                        onClick={() => handleSectionClick("inicio")}
-                    >
-                        <BsFillHousesFill className="inline-block mr-3 h-6 w-6" />
-                        {isSidebarOpen && (
-                            <p className="ml-2 text-lg font-semibold">Inicio</p>
-                        )}
-                    </div>
-                </li>
-                <li>
-                    <div
-                        className={`mx-2 p-2 text-lg font-semibold cursor-pointer flex ${activeSection === "inventario"
-                            ? `${activeColor} ${hoverActiveColor}`
-                            : hoverInactiveColor
-                            }`}
-                        onClick={() => handleSectionClick("inventario")}
-                    >
-                        <FaWarehouse className="inline-block mr-3 h-6 w-6" />
-                        {isSidebarOpen && (
-                            <p className="ml-2 text-lg font-semibold">Inventario</p>
-                        )}
-                    </div>
-                </li>
-                <li>
-                    <div
-                        className={`mx-2 p-2 text-lg font-semibold cursor-pointer flex ${activeSection === "centros_de_salud"
-                            ? `${activeColor} ${hoverActiveColor}`
-                            : hoverInactiveColor
-                            }`}
-                        onClick={() => handleSectionClick("centros_de_salud")}
-                    >
-                        <FaHospital className="inline-block mr-3 h-6 w-6" />
-                        {isSidebarOpen && (
-                            <p className="ml-2 text-lg font-semibold">Centros de Salud</p>
-                        )}
-                    </div>
-                </li>
-                <li>
-                    <div
-                        className={`mx-2 p-2 text-lg font-semibold cursor-pointer flex ${activeSection === "marcas"
-                            ? `${activeColor} ${hoverActiveColor}`
-                            : hoverInactiveColor
-                            }`}
-                        onClick={() => handleSectionClick("marcas")}
-                    >
-                        <FaTags className="inline-block mr-3 h-6 w-6" />
-                        {isSidebarOpen && (
-                            <p className="ml-2 text-lg font-semibold">Marcas</p>
-                        )}
-                    </div>
-                </li>
-                <li>
-                    <div
-                        className={`mx-2 p-2 text-lg font-semibold cursor-pointer flex ${activeSection === "municipios"
-                            ? `${activeColor} ${hoverActiveColor}`
-                            : hoverInactiveColor
-                            }`}
-                        onClick={() => handleSectionClick("municipios")}
-                    >
-                        <FaMapMarkedAlt className="inline-block mr-3 h-6 w-6" />
-                        {isSidebarOpen && (
-                            <p className="ml-2 text-lg font-semibold">Municipios</p>
-                        )}
-                    </div>
-                </li>
-                <li>
-                    <div
-                        className={`mx-2 p-2 text-lg font-semibold cursor-pointer flex ${activeSection === "bajas_tecnicas"
-                            ? `${activeColor} ${hoverActiveColor}`
-                            : hoverInactiveColor
-                            }`}
-                        onClick={() => handleSectionClick("bajas_tecnicas")}
-                    >
-                        <FaBriefcaseMedical className="inline-block mr-3 h-6 w-6" />
-                        {isSidebarOpen && (
-                            <p className="ml-2 text-lg font-semibold">Bajas Técnicas</p>
-                        )}
-                    </div>
-                </li>
-                <li>
-                    <div
-                        className={`mx-2 p-2 text-lg font-semibold cursor-pointer flex ${activeSection === "usuarios"
-                            ? `${activeColor} ${hoverActiveColor}`
-                            : hoverInactiveColor
-                            }`}
-                        onClick={() => handleSectionClick("usuarios")}
-                    >
-                        <FaUsers className="inline-block mr-3 h-6 w-6" />
-                        {isSidebarOpen && (
-                            <p className="ml-2 text-lg font-semibold">Usuarios</p>
-                        )}
-                    </div>
-                </li>
-                <li>
-                    <div
-                        className={`mx-2 p-2 text-lg font-semibold cursor-pointer flex ${activeSection === "reportes"
-                            ? `${activeColor} ${hoverActiveColor}`
-                            : hoverInactiveColor
-                            }`}
-                        onClick={() => handleSectionClick("reportes")}
-                    >
-                        <FaFileAlt className="inline-block mr-3 h-6 w-6" />
-                        {isSidebarOpen && (
-                            <p className="ml-2 text-lg font-semibold">Reportes</p>
-                        )}
-                    </div>
-                </li>
-            </ul>
-        </aside>
-    );
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
 };
 
 export default Sidebar;
