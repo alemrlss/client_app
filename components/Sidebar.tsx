@@ -4,7 +4,7 @@ import { Josefin_Sans } from "next/font/google";
 import { BsBoxArrowRight } from "react-icons/bs";
 import { MdClose } from "react-icons/md";
 import sidebarSections from "@/data/sidebarSections";
-
+import Link from "next/link"
 const josefin_sans = Josefin_Sans({
   //Fuente de google fonts configuracion
   weight: ["400"],
@@ -15,7 +15,7 @@ import profileDefault from "@/public/images/sidebar/default-profile.png";
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState("inicio");
+  const [activeSection, setActiveSection] = useState("/");
 
   //Funcion para abrir y cerrar el sidebar
   const toggleSidebar = () => {
@@ -72,26 +72,29 @@ const Sidebar = () => {
           }`}
       >
         {sidebarSections.map((section) => (
-          <li
-            key={section.id}
-            className={`mx-2 p-2 text-lg font-semibold cursor-pointer 
-                    flex ${activeSection === section.id
-                ? `${activeColor} ${hoverActiveColor}`
-                : hoverInactiveColor
-              }`}
+          <Link href={`${section.id}`} key={section.id} className={`mx-2 p-2 text-lg font-semibold cursor-pointer 
+          flex ${activeSection === section.id
+              ? `${activeColor} ${hoverActiveColor}`
+              : hoverInactiveColor
+            }`}
             onClick={() => {
               handleSectionClick(section.id);
-            }}
-          >
-            <span className="flex items-center">
-              {React.createElement(section.icon, { className: "h-6 w-6" })}
-            </span>
-            {isSidebarOpen && (
-              <span className="ml-2 text-lg font-semibold">
-                {section.title}
+            }}>
+            <li
+              className="flex"
+            >
+
+              <span className="flex items-center">
+                {React.createElement(section.icon, { className: "h-6 w-6" })}
               </span>
-            )}
-          </li>
+
+              {isSidebarOpen && (
+                <span className="ml-2 text-lg font-semibold">
+                  {section.title}
+                </span>
+              )}
+            </li>
+          </Link>
         ))}
       </ul>
     </aside>

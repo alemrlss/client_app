@@ -19,7 +19,7 @@ interface SidebarSection {
 const sidebarSections: SidebarSection[] = [
   {
     title: "Inicio",
-    id: "inicio",
+    id: "/",
     icon: BsFillHousesFill,
   },
   {
