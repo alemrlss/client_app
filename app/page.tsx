@@ -1,7 +1,10 @@
+import CardsGeneralInfo from "@/components/home/CardsGeneralInfo";
+import ChartsContainer from '@/components/home/ChartsContainer'
 export default function Home() {
   return (
-    <main className="flex flex-col items-center justify-center ">
-      Main Content
+    <main className="">
+      <CardsGeneralInfo />
+      <ChartsContainer />
     </main>
   )
 }

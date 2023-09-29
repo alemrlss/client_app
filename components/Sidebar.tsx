@@ -1,19 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { Josefin_Sans } from "next/font/google";
 import { BsBoxArrowRight } from "react-icons/bs";
 import { MdClose } from "react-icons/md";
 import sidebarSections from "@/data/sidebarSections";
 import Link from "next/link"
-const josefin_sans = Josefin_Sans({
-  //Fuente de google fonts configuracion
-  weight: ["400"],
-  subsets: ["latin"],
-});
+import sidebarBackgroundImage from "@/public/images/sidebar/sidebarBackground.png";
 import Image from "next/image";
 import profileDefault from "@/public/images/sidebar/default-profile.png";
 
 const Sidebar = () => {
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeSection, setActiveSection] = useState("/");
 
@@ -26,14 +22,19 @@ const Sidebar = () => {
     setActiveSection(sectionId);
   };
 
-  const activeColor = "text-color3 bg-slate-100 rounded-md";
-  const hoverActiveColor = ""; // Color de hover para secciones activas
-  const hoverInactiveColor = "hover:text-color5"; // Color de hover para secciones inactivas
+  const activeColor = "text-color3 bg-slate-100 rounded-r-2xl rounded-l-sm";
+  const hoverActiveColor = "";
+  const hoverInactiveColor = "hover:text-color5";
 
   return (
     <aside
-      className={`bg-color3 text-white ${isSidebarOpen ? "w-72" : "w-20"
+      className={` text-white ${isSidebarOpen ? "w-72" : "w-20"
         } transition-all duration-300 ease-in-out relative`}
+      style={{
+        background: `rgba(255, 255, 255, 1) url(${sidebarBackgroundImage.src})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }}
     >
       {isSidebarOpen && (
         <button
@@ -45,7 +46,7 @@ const Sidebar = () => {
       )}
       {isSidebarOpen && (
         <div
-          className={`${josefin_sans.className}  flex justify-center items-center border-b border-gray-500`}
+          className={`flex justify-center items-center border-b border-gray-500`}
         >
           <div className="flex flex-col items-center justify-center">
             <Image
