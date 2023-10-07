@@ -24,37 +24,37 @@ const sidebarSections: SidebarSection[] = [
   },
   {
     title: "Inventario",
-    id: "inventario",
+    id: "/inventario",
     icon: FaWarehouse,
   },
   {
     title: "Centros de Salud",
-    id: "centros-de-salud",
+    id: "/centros-de-salud",
     icon: FaHospital,
   },
   {
     title: "Marcas",
-    id: "marcas",
+    id: "/marcas",
     icon: FaTags,
   },
   {
     title: "Municipios",
-    id: "municipios",
+    id: "/municipios",
     icon: FaMapMarkedAlt,
   },
   {
     title: "Bajas tecnicas",
-    id: "bajas-tecnicas",
+    id: "/bajas-tecnicas",
     icon: FaBriefcaseMedical,
   },
   {
     title: "Usuarios",
-    id: "usuarios",
+    id: "/usuarios",
     icon: FaUsers,
   },
   {
     title: "Reportes",
-    id: "reportes",
+    id: "/reportes",
     icon: FaFileAlt,
   },
   // Agrega más secciones según tus necesidades

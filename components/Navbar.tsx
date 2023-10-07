@@ -1,17 +1,19 @@
 "use client"
 import React, { useState } from "react";
 import { BsHouseDoor, BsPerson, BsGear } from "react-icons/bs";
-import Image from "next/image";
-import logoImage from "@/public/images/navbar/logo2.png";
 import ConfigPanel from "./ConfigPanel";
+import ProfilePanel from "./ProfilePanel";
+import Link from "next/link"
+
 
 const Navbar: React.FC = () => {
-
-
   const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
-
+  const [isProfilePanelOpen, setIsProfilePanelOpen] = useState(false);
   const toggleConfigPanel = () => {
     setIsConfigPanelOpen(!isConfigPanelOpen);
+  };
+  const toggleProfilePanel = () => {
+    setIsProfilePanelOpen(!isProfilePanelOpen);
   };
 
   return (
@@ -27,9 +29,10 @@ const Navbar: React.FC = () => {
       {/* Derecha (botones) */}
       <div className="flex items-center space-x-2 mr-2">
         <button className="text-gray-700 mx-1">
-          <BsHouseDoor className="text-2xl" />
+          <Link href={`/`}>
+            <BsHouseDoor className="text-2xl" /></Link>
         </button>
-        <button className="text-gray-700 mx-1">
+        <button className="text-gray-700 mx-1" onClick={toggleProfilePanel}>
           <BsPerson className="text-2xl" />
         </button>
         <button className="text-gray-700 mx-1" onClick={toggleConfigPanel}>
@@ -37,6 +40,7 @@ const Navbar: React.FC = () => {
         </button>
       </div>
       <ConfigPanel isOpen={isConfigPanelOpen} onClose={toggleConfigPanel} />
+      <ProfilePanel isOpen={isProfilePanelOpen} onClose={toggleProfilePanel} />
     </nav>
   );
 };

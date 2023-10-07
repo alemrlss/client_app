@@ -1,23 +1,25 @@
-"use client";
-import React, { useState } from "react";
+"use client"; import React, { useState, useEffect } from "react";
 import { BsBoxArrowRight } from "react-icons/bs";
 import { MdClose } from "react-icons/md";
 import sidebarSections from "@/data/sidebarSections";
-import Link from "next/link"
+import Link from "next/link";
 import sidebarBackgroundImage from "@/public/images/sidebar/sidebarBackground.png";
 import Image from "next/image";
 import profileDefault from "@/public/images/sidebar/default-profile.png";
+import { usePathname } from 'next/navigation'; // Importa useRouter desde next/router
 
 const Sidebar = () => {
+  const pathname = usePathname(); // Obtén la instancia de useRouter
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState("/");
+  const [activeSection, setActiveSection] = useState(pathname);
 
-  //Funcion para abrir y cerrar el sidebar
+  // Función para abrir y cerrar el sidebar
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  //Funcion manejedaora para cambiar de seccion
+
+  // Función manejadora para cambiar de sección
   const handleSectionClick = (sectionId: string) => {
     setActiveSection(sectionId);
   };
@@ -25,6 +27,7 @@ const Sidebar = () => {
   const activeColor = "text-color3 bg-slate-100 rounded-r-2xl rounded-l-sm";
   const hoverActiveColor = "";
   const hoverInactiveColor = "hover:text-color5";
+
 
   return (
     <aside
@@ -84,11 +87,9 @@ const Sidebar = () => {
             <li
               className="flex"
             >
-
               <span className="flex items-center">
                 {React.createElement(section.icon, { className: "h-6 w-6" })}
               </span>
-
               {isSidebarOpen && (
                 <span className="ml-2 text-lg font-semibold">
                   {section.title}
