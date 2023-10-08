@@ -8,14 +8,19 @@ const ConfigPanel = ({ isOpen, onClose }: any) => {
             shadow-lg transition-transform transform ${isOpen ? 'translate-x-0' : 'translate-x-full'
                 } z-10`}
         >
-            <div className="p-4">
-                <h2 className="text-xl font-semibold mb-4">Configuración</h2>
+            <div className="p-4 bg-blue-700 text-white">
+                <h2 className="text-xl font-semibold mb-4">Configuraciones</h2>
+                <button
+                    className="absolute top-1 right-1 text-gray-300 hover:text-gray-400"
+                    onClick={onClose}
+                >
+                    Cerrar
+                </button>
             </div>
-            <button
-                className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-                onClick={onClose}>
-                Cerrar
-            </button>
+
+            <div className="mb-4">
+                test
+            </div>
         </div>
     );
 };

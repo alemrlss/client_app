@@ -14,7 +14,8 @@ const NotFound = () => {
                 alt="Pagina no encontrada"
                 width={500}
                 height={500}
-            />            <a
+            />
+            <a
                 href="/"
                 className="mt-4 text-blue-500 text-xl hover:underline"
             >

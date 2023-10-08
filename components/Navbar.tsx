@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { BsHouseDoor, BsPerson, BsGear } from "react-icons/bs";
 import ConfigPanel from "./ConfigPanel";
-import ProfilePanel from "./ProfilePanel";
+import ProfilePanel from "./profilePanel/ProfilePanel";
 import Link from "next/link"
 
 

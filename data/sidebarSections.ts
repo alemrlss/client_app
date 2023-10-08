@@ -8,6 +8,7 @@ import {
   FaBriefcaseMedical,
   FaUsers,
   FaFileAlt,
+  FaWrench,
 } from "react-icons/fa";
 
 interface SidebarSection {
@@ -23,6 +24,11 @@ const sidebarSections: SidebarSection[] = [
     icon: BsFillHousesFill,
   },
   {
+    title: "Reparaciones",
+    id: "/reparaciones",
+    icon: FaWrench,
+  },
+  {
     title: "Inventario",
     id: "/inventario",
     icon: FaWarehouse,
@@ -31,11 +37,6 @@ const sidebarSections: SidebarSection[] = [
     title: "Centros de Salud",
     id: "/centros-de-salud",
     icon: FaHospital,
-  },
-  {
-    title: "Marcas",
-    id: "/marcas",
-    icon: FaTags,
   },
   {
     title: "Municipios",
