@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Perfil from './Perfil';
 import Clave from './Clave';
-import { FaSignOutAlt } from 'react-icons/fa'
+import { FaSignOutAlt, FaTimes } from 'react-icons/fa'
 const ConfigPanel = ({ isOpen, onClose }: any) => {
     const [openSection, setOpenSection] = useState('');
 
@@ -17,10 +17,10 @@ const ConfigPanel = ({ isOpen, onClose }: any) => {
             <div className="p-4 bg-blue-700 text-white">
                 <h2 className="text-xl font-semibold mb-4">Gestion de Perfil</h2>
                 <button
-                    className="absolute top-1 right-1 text-gray-300 hover:text-gray-400"
+                    className="absolute top-2 right-2 text-gray-300 hover:text-gray-400"
                     onClick={onClose}
                 >
-                    Cerrar
+                    <FaTimes classname="w-6 h-6" />
                 </button>
             </div>
 
@@ -28,8 +28,6 @@ const ConfigPanel = ({ isOpen, onClose }: any) => {
 
 
             <div className="mb-4">
-
-                {/* Sección de Perfil */}
 
 
                 <a

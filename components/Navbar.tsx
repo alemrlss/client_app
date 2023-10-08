@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { BsHouseDoor, BsPerson, BsGear } from "react-icons/bs";
-import ConfigPanel from "./ConfigPanel";
+import ConfigPanel from "./configPanel/ConfigPanel";
 import ProfilePanel from "./profilePanel/ProfilePanel";
 import Link from "next/link"
 
