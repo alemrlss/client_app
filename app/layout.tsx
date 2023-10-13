@@ -1,10 +1,11 @@
+
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Navbar from '../components/Navbar'
-import Sidebar from '../components/Sidebar'
 import { Roboto } from "next/font/google";
 import favicon from '@/app/favicon.png'
+import SessionAuthProvider from '@/context/SessionAuthProvider'
+
 
 const inter = Inter({ subsets: ['latin'] })
 const robotoFont = Roboto({
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
@@ -30,15 +31,11 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.className} flex ${robotoFont.className}  
-      flex flex-col md:flex-row h-screen overflow-hidden`}>
-        <Sidebar />
-        <div className={`flex-1 bg-gray-200 overflow-y-auto`}>
-          <Navbar />
+      <SessionAuthProvider>
+        <body className={`${inter.className} ${robotoFont.className} `}>
           {children}
-        </div>
-
-      </body>
+        </body>
+      </SessionAuthProvider>
     </html>
   )
 }

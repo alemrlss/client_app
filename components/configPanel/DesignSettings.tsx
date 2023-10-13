@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ColorsPanel from './DesignSettings/ColorsPanel';
 import FontsPanel from './DesignSettings/FontsPanel';
-import LanguajesPanel from './DesignSettings/LanguajesPanel';
+import LanguagesPanel from './DesignSettings/LanguagesPanel';
 import ThemesPanel from './DesignSettings/ThemesPanel';
 
 const DesignSettings = () => {
@@ -50,12 +50,12 @@ const DesignSettings = () => {
 
     return (
         <div className="p-3 pb-0">
-            <h3 className="text-lg font-semibold mb-1 underline text-center">Diseño de la App</h3>
+            <h3 className="text-lg font-semibold mb-1 text-center">Diseño de la App</h3>
             <ColorsPanel colorOptions={colorOptions} selectedColor={selectedColor} handleChangeColor={handleChangeColor} />
             <FontsPanel fontOptions={fontOptions} selectedFont={selectedFont} handleChangeFont={handleChangeFont} />
 
             <div className="grid grid-cols-2 gap-2">
-                <LanguajesPanel languageOptions={languageOptions} selectedLanguage={selectedLanguage} handleChangeLanguage={handleChangeLanguage} />
+                <LanguagesPanel languageOptions={languageOptions} selectedLanguage={selectedLanguage} handleChangeLanguage={handleChangeLanguage} />
                 <ThemesPanel isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
             </div>
         </div>

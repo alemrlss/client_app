@@ -16,7 +16,7 @@ const NotFound = () => {
                 height={500}
             />
             <a
-                href="/"
+                href="/dashboard"
                 className="mt-4 text-blue-500 text-xl hover:underline"
             >
                 Volver a la página de inicio

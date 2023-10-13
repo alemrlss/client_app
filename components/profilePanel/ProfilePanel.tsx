@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Perfil from './Perfil';
 import Clave from './Clave';
 import { FaSignOutAlt, FaTimes } from 'react-icons/fa'
+import { signOut } from 'next-auth/react';
 const ConfigPanel = ({ isOpen, onClose }: any) => {
     const [openSection, setOpenSection] = useState('');
 
@@ -62,12 +63,14 @@ const ConfigPanel = ({ isOpen, onClose }: any) => {
                 <div className='flex justify-center mx-4 my-2'>
                     <button
                         className={`text-sm cursor-pointer font-semibold flex items-center p-2 focus:outline-none rounded-b-xl hover:bg-red-200 hover:text-red-900`}
-                    >
+                        onClick={() => {
+                            signOut({ callbackUrl: '/login' })
+                        }}>
                         Cerrar Sesión <FaSignOutAlt className="ml-1 hover:text-red-900" />
                     </button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

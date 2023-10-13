@@ -20,42 +20,37 @@ interface SidebarSection {
 const sidebarSections: SidebarSection[] = [
   {
     title: "Inicio",
-    id: "/",
+    id: "/dashboard",
     icon: BsFillHousesFill,
   },
   {
     title: "Reparaciones",
-    id: "/reparaciones",
+    id: "/dashboard/reparaciones",
     icon: FaWrench,
   },
   {
     title: "Inventario",
-    id: "/inventario",
+    id: "/dashboard/inventario",
     icon: FaWarehouse,
   },
   {
     title: "Centros de Salud",
-    id: "/centros-de-salud",
+    id: "/dashboard/centros-de-salud",
     icon: FaHospital,
   },
   {
-    title: "Municipios",
-    id: "/municipios",
-    icon: FaMapMarkedAlt,
-  },
-  {
     title: "Bajas tecnicas",
-    id: "/bajas-tecnicas",
+    id: "/dashboard/bajas-tecnicas",
     icon: FaBriefcaseMedical,
   },
   {
     title: "Usuarios",
-    id: "/usuarios",
+    id: "/dashboard/usuarios",
     icon: FaUsers,
   },
   {
     title: "Reportes",
-    id: "/reportes",
+    id: "/dashboard/reportes",
     icon: FaFileAlt,
   },
   // Agrega más secciones según tus necesidades

@@ -12,7 +12,7 @@ function FontsPanel({ fontOptions, selectedFont, handleChangeFont }: Props) {
         <div className='bg-gray-100 p-2 rounded-lg mb-2'>
             <h4 className="text-md font-semibold mb-0">Fuente</h4>
             <select
-                className="w-full p-2 border rounded-md text-xs"
+                className="w-full p-2 border rounded-md text-sm"
                 value={selectedFont}
                 onChange={(e) => handleChangeFont(e.target.value)}
             >

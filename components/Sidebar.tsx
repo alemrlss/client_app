@@ -1,4 +1,5 @@
-"use client"; import React, { useState, useEffect } from "react";
+"use client";
+import React, { useState } from "react";
 import { BsBoxArrowRight } from "react-icons/bs";
 import { MdClose } from "react-icons/md";
 import sidebarSections from "@/data/sidebarSections";
@@ -10,6 +11,7 @@ import { usePathname } from 'next/navigation'; // Importa useRouter desde next/r
 
 const Sidebar = () => {
   const pathname = usePathname(); // Obtén la instancia de useRouter
+  console.log(pathname)
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeSection, setActiveSection] = useState(pathname);
@@ -77,10 +79,8 @@ const Sidebar = () => {
       >
         {sidebarSections.map((section) => (
           <Link href={`${section.id}`} key={section.id} className={`mx-2 p-2 text-lg font-semibold cursor-pointer 
-          flex ${activeSection === section.id
-              ? `${activeColor} ${hoverActiveColor}`
-              : hoverInactiveColor
-            }`}
+          flex 
+          ${activeSection === section.id ? `${activeColor} ${hoverActiveColor}` : hoverInactiveColor}`}
             onClick={() => {
               handleSectionClick(section.id);
             }}>

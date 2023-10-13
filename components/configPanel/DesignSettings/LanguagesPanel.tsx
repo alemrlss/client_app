@@ -6,12 +6,12 @@ type Props = {
     handleChangeLanguage: (language: string) => void;
 }
 
-function LanguajesPanel({ languageOptions, selectedLanguage, handleChangeLanguage }: Props) {
+function LanguagesPanel({ languageOptions, selectedLanguage, handleChangeLanguage }: Props) {
     return (
         <div className="bg-gray-100 p-2 rounded-lg">
             <h4 className="text-md font-semibold mb-0">Idioma</h4>
             <select
-                className="w-full p-2 border rounded-md text-xs"
+                className="w-full p-2 border rounded-md text-sm"
                 value={selectedLanguage}
                 onChange={(e) => handleChangeLanguage(e.target.value)}
             >
@@ -24,4 +24,4 @@ function LanguajesPanel({ languageOptions, selectedLanguage, handleChangeLanguag
         </div>)
 }
 
-export default LanguajesPanel
+export default LanguagesPanel
