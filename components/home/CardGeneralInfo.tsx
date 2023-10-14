@@ -1,11 +1,8 @@
 import React from 'react';
 import { IconType } from 'react-icons';
-import { TiPrinter } from 'react-icons/ti';
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';

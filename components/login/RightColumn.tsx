@@ -15,7 +15,8 @@ function RightColumn({ }: Props) {
                 <div className='hidden md:block'>
                     {/* <!--Lo que vaya aqui dentro. No se renderizara para mobile--> */}
                     <h4 className="mb-6 text-xl font-semibold  ">
-                        Debemos agregar algun tipo de informacion                    </h4>
+                        Debemos agregar algun tipo de informacion
+                    </h4>
                     <p className="text-sm">
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit,
                         sed do eiusmod tempor incididunt ut labore et dolore magna

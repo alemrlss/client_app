@@ -1,9 +1,10 @@
-import React from 'react'
 import CardsGeneralInfo from "@/components/home/CardsGeneralInfo";
 import ChartsContainer from '@/components/home/ChartsContainer'
 type Props = {}
 
-function page({ }: Props) {
+function Dashboard({ }: Props) {
+
+
     return (
         <div>
             <CardsGeneralInfo />
@@ -12,4 +13,4 @@ function page({ }: Props) {
     )
 }
 
-export default page
+export default Dashboard

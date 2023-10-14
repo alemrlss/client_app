@@ -1,6 +1,17 @@
 "use client"
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import React, { useState, useEffect } from 'react';
+import TableCareCenter from '@/components/careCenter/TableCareCenter';
+import AddCareCenter from '@/components/careCenter/AddCareCenter';
 
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
 type CentroDeSalud = {
     id: number;
     nombre: string;
@@ -11,15 +22,51 @@ type CentroDeSalud = {
     telefonoResponsable: string;
 };
 
-function CentrosDeSaludPage() {
+function CustomTabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{ p: 3 }}>
+                    {children}
+                </Box>
+            )}
+        </div>
+    );
+}
+
+function a11yProps(index: number) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
+
+export default function CentrosDeSaludPage() {
     const [centrosDeSalud, setCentrosDeSalud] = useState<CentroDeSalud[]>([]);
+    const [nuevoCentro, setNuevoCentro] = useState<CentroDeSalud>({
+        id: 0,
+        nombre: '',
+        tipo: '',
+        municipio: '',
+        direccion: '',
+        director: '',
+        telefonoResponsable: '',
+    });
 
     useEffect(() => {
         // Datos de ejemplo
         const dataEjemplo: CentroDeSalud[] = [
             {
                 id: 1,
-                nombre: 'Centro de Salud A',
+                nombre: 'ANDREA MARTINEZ',
                 tipo: 'Tipo 1',
                 municipio: 'Maracaibo',
                 direccion: 'Dirección 1',
@@ -82,86 +129,77 @@ function CentrosDeSaludPage() {
             },
             {
                 id: 8,
-                nombre: 'Centro de Salud H',
-                tipo: 'Tipo 8',
-                municipio: 'Municipio 8',
-                direccion: 'Dirección 8',
-                director: 'Director 8',
-                telefonoResponsable: '333-333-3333',
+                nombre: 'Centro de Salud G',
+                tipo: 'Tipo 7',
+                municipio: 'Municipio 7',
+                direccion: 'Dirección 7',
+                director: 'Director 7',
+                telefonoResponsable: '222-222-2222',
             },
             {
                 id: 9,
-                nombre: 'Centro de Salud I',
-                tipo: 'Tipo 9',
-                municipio: 'Municipio 9',
-                direccion: 'Dirección 9',
-                director: 'Director 9',
-                telefonoResponsable: '444-444-4444',
-            },
-            {
+                nombre: 'Centro de Salud G',
+                tipo: 'Tipo 7',
+                municipio: 'Municipio 7',
+                direccion: 'Dirección 7',
+                director: 'Director 7',
+                telefonoResponsable: '222-222-2222',
+            }, {
                 id: 10,
-                nombre: 'Centro de Salud J',
-                tipo: 'Tipo 10',
-                municipio: 'Municipio 10',
-                direccion: 'Dirección 10',
-                director: 'Director 10',
-                telefonoResponsable: '666-666-6666',
-            },
-        ];
+                nombre: 'Centro de Salud G',
+                tipo: 'Tipo 7',
+                municipio: 'Municipio 7',
+                direccion: 'Dirección 7',
+                director: 'Director 7',
+                telefonoResponsable: '222-222-2222',
+            }
+        ]
         setCentrosDeSalud(dataEjemplo);
     }, []);
 
     const handleEdit = (centroId: number) => {
+        // Implementa la lógica de edición aquí
     };
 
     const handleDelete = (centroId: number) => {
+        const updatedCentros = centrosDeSalud.filter((centro) => centro.id !== centroId);
+        setCentrosDeSalud(updatedCentros);
+    };
+
+    const handleAddCentro = () => {
+        const newId = centrosDeSalud.length + 1;
+        const nuevoCentroDeSalud = { ...nuevoCentro, id: newId };
+        setCentrosDeSalud([...centrosDeSalud, nuevoCentroDeSalud]);
+        setNuevoCentro({
+            id: 0,
+            nombre: '',
+            tipo: '',
+            municipio: '',
+            direccion: '',
+            director: '',
+            telefonoResponsable: '',
+        });
+    };
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
     };
 
     return (
-        <main className="flex flex-col items-center justify-center p-4">
-            <table className="w-full border-collapse border border-gray-300">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border p-2">ID</th>
-                        <th className="border p-2">Nombre</th>
-                        <th className="border p-2">Tipo</th>
-                        <th className="border p-2">Municipio</th>
-                        <th className="border p-2">Dirección</th>
-                        <th className="border p-2">Director</th>
-                        <th className="border p-2">Teléfono del Responsable</th>
-                        <th className="border p-2"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {centrosDeSalud.map((centro) => (
-                        <tr key={centro.id} className='text-center'>
-                            <td className="border p-2">{centro.id}</td>
-                            <td className="border p-2">{centro.nombre}</td>
-                            <td className="border p-2">{centro.tipo}</td>
-                            <td className="border p-2">{centro.municipio}</td>
-                            <td className="border p-2">{centro.direccion}</td>
-                            <td className="border p-2">{centro.director}</td>
-                            <td className="border p-2">{centro.telefonoResponsable}</td>
-                            <td className="border p-2">
-                                <button
-                                    onClick={() => handleEdit(centro.id)}
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-1"
-                                >
-                                    Editar
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(centro.id)}
-                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-1"
-                                >
-                                    Eliminar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </main>
+        <Box sx={{ width: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', marginTop: 1 }}>
+                <Tabs value={value} onChange={handleChange} centered variant='fullWidth' textColor='primary' indicatorColor="primary">
+                    <Tab label="Centros de Salud" {...a11yProps(0)} />
+                    <Tab label="Agregar Centro" {...a11yProps(1)} />
+                </Tabs>
+            </Box>
+            <CustomTabPanel value={value} index={0}>
+                <TableCareCenter centrosDeSalud={centrosDeSalud} handleEdit={handleEdit} handleDelete={handleDelete} />
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1} >
+                <AddCareCenter nuevoCentro={nuevoCentro} setNuevoCentro={setNuevoCentro} handleAddCentro={handleAddCentro} />
+            </CustomTabPanel>
+        </Box>
     );
 }
-
-export default CentrosDeSaludPage;

@@ -12,6 +12,10 @@ const handler = NextAuth({
       async authorize(credentials, req) {
         const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
 
+
+        console.log(process.env.NEXT_PUBLIC_BACKEND_URL)
+        console.log(process.env.NEXTAUTH_SECRET)
+        console.log(process.env.NEXTAUTH_URL)
         if (user) {
           return user;
         } else {

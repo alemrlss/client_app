@@ -64,7 +64,7 @@ const ConfigPanel = ({ isOpen, onClose }: any) => {
                     <button
                         className={`text-sm cursor-pointer font-semibold flex items-center p-2 focus:outline-none rounded-b-xl hover:bg-red-200 hover:text-red-900`}
                         onClick={() => {
-                            signOut({ callbackUrl: '/login' })
+                            signOut({ callbackUrl: `/login` })
                         }}>
                         Cerrar Sesión <FaSignOutAlt className="ml-1 hover:text-red-900" />
                     </button>

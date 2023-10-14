@@ -29,8 +29,8 @@ const sidebarSections: SidebarSection[] = [
     icon: FaWrench,
   },
   {
-    title: "Inventario",
-    id: "/dashboard/inventario",
+    title: "Equipos Tecnologicos",
+    id: "/dashboard/equipos-tecnologicos",
     icon: FaWarehouse,
   },
   {
