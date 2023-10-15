@@ -7,11 +7,10 @@ import Link from "next/link";
 import sidebarBackgroundImage from "@/public/images/sidebar/sidebarBackground.png";
 import Image from "next/image";
 import profileDefault from "@/public/images/sidebar/default-profile.png";
-import { usePathname } from 'next/navigation'; // Importa useRouter desde next/router
+import { usePathname } from 'next/navigation'; 
 
 const Sidebar = () => {
-  const pathname = usePathname(); // Obtén la instancia de useRouter
-  console.log(pathname)
+  const pathname = usePathname(); 
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeSection, setActiveSection] = useState(pathname);

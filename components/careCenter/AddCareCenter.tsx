@@ -4,17 +4,17 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 type Props = {
-    setNuevoCentro: React.Dispatch<React.SetStateAction<any>>;
-    nuevoCentro: any;
-    handleAddCentro: () => void;
+    setNewCenter: React.Dispatch<React.SetStateAction<any>>;
+    newCenter: any;
+    handleAddCenter: () => void;
 };
 
-function AddCareCenter({ setNuevoCentro, nuevoCentro, handleAddCentro }: Props) {
+function AddCareCenter({ setNewCenter, newCenter, handleAddCenter }: Props) {
     const handleLimpiarDatos = () => {
         // Restablecer todos los valores del nuevo centro a su estado inicial
-        setNuevoCentro({
-            nombre: '',
-            tipo: '',
+        setNewCenter({
+            name: '',
+            typeCenter: 0,
             municipio: '',
             direccion: '',
             director: '',
@@ -25,22 +25,21 @@ function AddCareCenter({ setNuevoCentro, nuevoCentro, handleAddCentro }: Props) 
     return (
         <div className="bg-white rounded-md shadow-md p-4">
             <h2 className="text-3xl font-semibold p-4 text-center">Nuevo Centro de Salud</h2>
-
             <form className="grid grid-cols-2 gap-6 p-4">
                 <TextField
                     variant="outlined"
                     label="Nombre"
                     fullWidth
-                    value={nuevoCentro.nombre}
-                    onChange={(e) => setNuevoCentro({ ...nuevoCentro, nombre: e.target.value })}
+                    value={newCenter.name}
+                    onChange={(e) => setNewCenter({ ...newCenter, name: e.target.value })}
                 />
 
                 <TextField
                     variant="outlined"
                     label="Tipo"
                     fullWidth
-                    value={nuevoCentro.tipo}
-                    onChange={(e) => setNuevoCentro({ ...nuevoCentro, tipo: e.target.value })}
+                    value={newCenter.typeCenter}
+                    onChange={(e) => setNewCenter({ ...newCenter, typeCenter: e.target.value })}
                 />
 
                 <FormControl variant="outlined" fullWidth>
@@ -48,8 +47,8 @@ function AddCareCenter({ setNuevoCentro, nuevoCentro, handleAddCentro }: Props) 
                     <Select
                         labelId="demo-simple-select-outlined-label"
                         label="Municipio"
-                        value={nuevoCentro.municipio}
-                        onChange={(e) => setNuevoCentro({ ...nuevoCentro, municipio: e.target.value })}
+                        value={newCenter.municipio}
+                        onChange={(e) => setNewCenter({ ...newCenter, municipio: e.target.value })}
                     >
                         <MenuItem value="Maracaibo">Maracaibo</MenuItem>
                         <MenuItem value="San Francisco">San Francisco</MenuItem>
@@ -61,24 +60,24 @@ function AddCareCenter({ setNuevoCentro, nuevoCentro, handleAddCentro }: Props) 
                     variant="outlined"
                     label="Dirección"
                     fullWidth
-                    value={nuevoCentro.direccion}
-                    onChange={(e) => setNuevoCentro({ ...nuevoCentro, direccion: e.target.value })}
+                    value={newCenter.direccion}
+                    onChange={(e) => setNewCenter({ ...newCenter, direccion: e.target.value })}
                 />
 
                 <TextField
                     variant="outlined"
                     label="Director"
                     fullWidth
-                    value={nuevoCentro.director}
-                    onChange={(e) => setNuevoCentro({ ...nuevoCentro, director: e.target.value })}
+                    value={newCenter.director}
+                    onChange={(e) => setNewCenter({ ...newCenter, director: e.target.value })}
                 />
 
                 <TextField
                     variant="outlined"
                     label="Número de Teléfono"
                     fullWidth
-                    value={nuevoCentro.telefonoResponsable}
-                    onChange={(e) => setNuevoCentro({ ...nuevoCentro, telefonoResponsable: e.target.value })}
+                    value={newCenter.telefonoResponsable}
+                    onChange={(e) => setNewCenter({ ...newCenter, telefonoResponsable: e.target.value })}
                 />
 
                 <div className="col-span-2 flex space-x-2">
@@ -94,7 +93,7 @@ function AddCareCenter({ setNuevoCentro, nuevoCentro, handleAddCentro }: Props) 
                     <Button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                         sx={{ width: '100%' }}
-                        onClick={handleAddCentro}
+                        onClick={handleAddCenter}
                         variant="contained"
                         endIcon={<AddCircleOutlineIcon />}
                     >

@@ -1,59 +1,57 @@
 "use client"
 import React from 'react'
-
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 type CentroDeSalud = {
-    id: number;
-    nombre: string;
+    id: string;
+    name: string;
     tipo: string;
     municipio: string;
     direccion: string;
     director: string;
+    typeCenter: number;
     telefonoResponsable: string;
 };
 type Props = {
-    centrosDeSalud: CentroDeSalud[];
-    handleEdit: (id: number) => void;
-    handleDelete: (id: number) => void;
+    careCenters: CentroDeSalud[];
+    handleEdit: (id: string) => void;
+    handleDelete: (id: string) => void;
 }
 
-function TableCareCenter({ centrosDeSalud, handleEdit, handleDelete }: Props) {
+function TableCareCenter({ careCenters, handleEdit, handleDelete }: Props) {
     return (
         <table className="w-full border-collapse border border-gray-300 text-sm">
             <thead>
                 <tr className="bg-gray-100">
-                    <th className="border p-2">ID</th>
                     <th className="border p-2">Nombre</th>
                     <th className="border p-2">Tipo</th>
                     <th className="border p-2">Municipio</th>
                     <th className="border p-2">Dirección</th>
                     <th className="border p-2">Director</th>
                     <th className="border p-2">Teléfono del Responsable</th>
-                    <th className="border p-2"></th>
+                    <th className="border p-2">Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                {centrosDeSalud.map((centro) => (
-                    <tr key={centro.id} className='text-center'>
-                        <td className="border p-2">{centro.id}</td>
-                        <td className="border p-2">{centro.nombre}</td>
-                        <td className="border p-2">{centro.tipo}</td>
-                        <td className="border p-2">{centro.municipio}</td>
-                        <td className="border p-2">{centro.direccion}</td>
-                        <td className="border p-2">{centro.director}</td>
-                        <td className="border p-2">{centro.telefonoResponsable}</td>
+                {careCenters.map((center) => (
+                    <tr key={center.id} className='text-center'>
+                        <td className="border p-2 text-xs">{center.name}</td>
+                        <td className="border p-2">{center.typeCenter}</td>
+                        <td className="border p-2">{center.municipio}</td>
+                        <td className="border p-2">{center.direccion}</td>
+                        <td className="border p-2">{center.director ? center.director : 'NO ASIGNADO'}</td>
+                        <td className="border p-2">{center.telefonoResponsable}</td>
                         <td className="border p-2">
-                            <button
-                                onClick={() => handleEdit(centro.id)}
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-1"
+
+                            <IconButton color='primary' aria-label="delete" size="large" onClick={() => handleEdit(center.id)}
                             >
-                                Editar
-                            </button>
-                            <button
-                                onClick={() => handleDelete(centro.id)}
-                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-1"
+                                <ModeEditIcon />
+                            </IconButton>
+                            <IconButton color='error' aria-label="delete" size="large" onClick={() => handleDelete(center.id)}
                             >
-                                Eliminar
-                            </button>
+                                <DeleteIcon />
+                            </IconButton>
                         </td>
                     </tr>
                 ))}

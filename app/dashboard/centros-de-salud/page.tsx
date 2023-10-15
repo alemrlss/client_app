@@ -1,11 +1,12 @@
 "use client"
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import React, { useState, useEffect } from 'react';
 import TableCareCenter from '@/components/careCenter/TableCareCenter';
 import AddCareCenter from '@/components/careCenter/AddCareCenter';
+import LoaderTables from '@/components/Loaders/LoaderTables';
+import axios from 'axios'
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -13,12 +14,13 @@ interface TabPanelProps {
     value: number;
 }
 type CentroDeSalud = {
-    id: number;
-    nombre: string;
+    id: string;
+    name: string;
     tipo: string;
     municipio: string;
     direccion: string;
     director: string;
+    typeCenter: number;
     telefonoResponsable: string;
 };
 
@@ -50,130 +52,52 @@ function a11yProps(index: number) {
 }
 
 export default function CentrosDeSaludPage() {
-    const [centrosDeSalud, setCentrosDeSalud] = useState<CentroDeSalud[]>([]);
-    const [nuevoCentro, setNuevoCentro] = useState<CentroDeSalud>({
-        id: 0,
-        nombre: '',
+    const [careCenters, setCareCenters] = useState<CentroDeSalud[]>([]);
+    const [newCenter, setNewCenter] = useState<CentroDeSalud>({
+        id: "",
+        name: '',
         tipo: '',
+        typeCenter: 0,
         municipio: '',
         direccion: '',
         director: '',
         telefonoResponsable: '',
     });
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
-        // Datos de ejemplo
-        const dataEjemplo: CentroDeSalud[] = [
-            {
-                id: 1,
-                nombre: 'ANDREA MARTINEZ',
-                tipo: 'Tipo 1',
-                municipio: 'Maracaibo',
-                direccion: 'Dirección 1',
-                director: 'Director 1',
-                telefonoResponsable: '123-456-7890',
-            },
-            {
-                id: 2,
-                nombre: 'Centro de Salud B',
-                tipo: 'Tipo 2',
-                municipio: 'Municipio 2',
-                direccion: 'Dirección 2',
-                director: 'Director 2',
-                telefonoResponsable: '987-654-3210',
-            },
-            {
-                id: 3,
-                nombre: 'Centro de Salud C',
-                tipo: 'Tipo 3',
-                municipio: 'Municipio 3',
-                direccion: 'Dirección 3',
-                director: 'Director 3',
-                telefonoResponsable: '555-555-5555',
-            },
-            {
-                id: 4,
-                nombre: 'Centro de Salud D',
-                tipo: 'Tipo 4',
-                municipio: 'Municipio 4',
-                direccion: 'Dirección 4',
-                director: 'Director 4',
-                telefonoResponsable: '777-777-7777',
-            },
-            {
-                id: 5,
-                nombre: 'Centro de Salud E',
-                tipo: 'CDI',
-                municipio: 'Municipio 5',
-                direccion: 'Dirección 5',
-                director: 'Director 5',
-                telefonoResponsable: '999-999-9999',
-            },
-            {
-                id: 6,
-                nombre: 'Centro de Salud F',
-                tipo: 'CDI',
-                municipio: 'Municipio 6',
-                direccion: 'Dirección 6',
-                director: 'Director 6',
-                telefonoResponsable: '111-111-1111',
-            },
-            {
-                id: 7,
-                nombre: 'Centro de Salud G',
-                tipo: 'Tipo 7',
-                municipio: 'Municipio 7',
-                direccion: 'Dirección 7',
-                director: 'Director 7',
-                telefonoResponsable: '222-222-2222',
-            },
-            {
-                id: 8,
-                nombre: 'Centro de Salud G',
-                tipo: 'Tipo 7',
-                municipio: 'Municipio 7',
-                direccion: 'Dirección 7',
-                director: 'Director 7',
-                telefonoResponsable: '222-222-2222',
-            },
-            {
-                id: 9,
-                nombre: 'Centro de Salud G',
-                tipo: 'Tipo 7',
-                municipio: 'Municipio 7',
-                direccion: 'Dirección 7',
-                director: 'Director 7',
-                telefonoResponsable: '222-222-2222',
-            }, {
-                id: 10,
-                nombre: 'Centro de Salud G',
-                tipo: 'Tipo 7',
-                municipio: 'Municipio 7',
-                direccion: 'Dirección 7',
-                director: 'Director 7',
-                telefonoResponsable: '222-222-2222',
-            }
-        ]
-        setCentrosDeSalud(dataEjemplo);
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/careCenter`)
+            .then((response) => {
+                setCareCenters(response.data);
+                setIsLoading(false);
+                setError(true);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                setError(false);
+                console.error('Error al cargar los centros de salud', error);
+            });
     }, []);
 
-    const handleEdit = (centroId: number) => {
+    const handleEdit = (centerId: string) => {
         // Implementa la lógica de edición aquí
     };
 
-    const handleDelete = (centroId: number) => {
-        const updatedCentros = centrosDeSalud.filter((centro) => centro.id !== centroId);
-        setCentrosDeSalud(updatedCentros);
+    const handleDelete = (centerId: string) => {
+        const updatedCentros = careCenters.filter((center) => center.id !== centerId);
+        setCareCenters(updatedCentros);
     };
 
-    const handleAddCentro = () => {
-        const newId = centrosDeSalud.length + 1;
-        const nuevoCentroDeSalud = { ...nuevoCentro, id: newId };
-        setCentrosDeSalud([...centrosDeSalud, nuevoCentroDeSalud]);
-        setNuevoCentro({
-            id: 0,
-            nombre: '',
+    const handleAddCenter = () => {
+        const newId = careCenters.length + 1;
+        const newCareCenter = { ...newCenter, id: newId.toString() };
+        setCareCenters([...careCenters, newCareCenter]);
+        setNewCenter({
+            id: "",
+            name: '',
             tipo: '',
+            typeCenter: 0,
             municipio: '',
             direccion: '',
             director: '',
@@ -195,10 +119,21 @@ export default function CentrosDeSaludPage() {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <TableCareCenter centrosDeSalud={centrosDeSalud} handleEdit={handleEdit} handleDelete={handleDelete} />
+                {isLoading ? (
+                    <LoaderTables />
+                ) : (
+                    (error) ? (
+                        <TableCareCenter careCenters={careCenters} handleEdit={handleEdit} handleDelete={handleDelete} />
+                    ) : (
+                        <div className='text-center text-red-500 font-bold mt-4'>
+                            <h1>Hubo un error al cargar los centros de salud</h1>
+                            <p>Por favor, intente mas tarde</p>
+                        </div>
+                    )
+                )}
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1} >
-                <AddCareCenter nuevoCentro={nuevoCentro} setNuevoCentro={setNuevoCentro} handleAddCentro={handleAddCentro} />
+                <AddCareCenter newCenter={newCenter} setNewCenter={setNewCenter} handleAddCenter={handleAddCenter} />
             </CustomTabPanel>
         </Box>
     );
