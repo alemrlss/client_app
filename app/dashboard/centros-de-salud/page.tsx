@@ -72,6 +72,7 @@ export default function CentrosDeSaludPage() {
                 setCareCenters(response.data);
                 setIsLoading(false);
                 setError(true);
+                console.log(response.data)
             })
             .catch((error) => {
                 setIsLoading(false);

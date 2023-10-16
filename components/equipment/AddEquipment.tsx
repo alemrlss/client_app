@@ -39,7 +39,7 @@ function AddEquipement({ setNewEquipment, newEquipment, handleAddEquipment }: Pr
                     <InputLabel id="demo-simple-select-outlined-label">Estado</InputLabel>
                     <Select
                         labelId="demo-simple-select-outlined-label"
-                        label="Centro de Salud"
+                        label="Estado"
                         value={newEquipment.status}
                         onChange={(e) => setNewEquipment({ ...newEquipment, status: e.target.value })}
                     >
@@ -55,9 +55,6 @@ function AddEquipement({ setNewEquipment, newEquipment, handleAddEquipment }: Pr
                     value={newEquipment.model}
                     onChange={(e) => setNewEquipment({ ...newEquipment, model: e.target.value })}
                 />
-
-
-
                 <TextField
                     variant="outlined"
                     label="Marca"
@@ -65,7 +62,6 @@ function AddEquipement({ setNewEquipment, newEquipment, handleAddEquipment }: Pr
                     value={newEquipment.brand}
                     onChange={(e) => setNewEquipment({ ...newEquipment, brand: e.target.value })}
                 />
-
                 <TextField
                     variant="outlined"
                     label="Serial"
@@ -73,7 +69,6 @@ function AddEquipement({ setNewEquipment, newEquipment, handleAddEquipment }: Pr
                     value={newEquipment.key}
                     onChange={(e) => setNewEquipment({ ...newEquipment, key: e.target.value })}
                 />
-
                 <TextField
                     variant="outlined"
                     label="Bien Nacional"
