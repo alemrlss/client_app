@@ -29,7 +29,7 @@ function TableEquipement({ equipments, handleOpenModalEdit, handleOpenModalDelet
             <tbody>
                 {equipments.map((equipment) => (
                     <tr key={equipment.id} className='text-center'>
-                        <td className="border p-2 max-w-[10px]">#0000</td>
+                        <td className="border p-2 max-w-[10px]">0000</td>
                         <td className="border p-2 max-w-[50px]">{equipment.name}</td>
                         <td className="border p-2 max-w-[10px]">{equipment.brand}</td>
                         <td className="border p-2 max-w-[10px]">{equipment.operative ? "Si" : "No"}</td>

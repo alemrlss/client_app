@@ -3,6 +3,7 @@ export interface Equipments {
   name: string;
   model: string;
   brand: string;
+  serial: string;
   key: string;
   nationalKey: string;
   operative: boolean;

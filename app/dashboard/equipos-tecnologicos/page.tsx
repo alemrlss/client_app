@@ -8,7 +8,7 @@ import TableEquipment from '@/components/equipment/TableEquipment';
 import AddEquipment from '@/components/equipment/AddEquipment';
 import ModalDelete from '@/components/equipment/ModalDelete';
 import ModalEdit from '@/components/equipment/ModalEdit';
-import { getEquipments, updateEquipment } from '@/utils/equipmentService';
+import { createEquipment, getEquipments, updateEquipment } from '@/utils/equipmentService';
 import SnackBar from '@/components/equipment/SnackBar';
 import { getCareCenters } from '@/utils/carecentersService';
 import ModalEquipment from '@/components/equipment/ModalEquipment';
@@ -52,7 +52,6 @@ function a11yProps(index: number) {
 export default function EquiposTecnologicosPage() {
     //Equipments
     const [equipments, setEquipments] = useState<Equipments[]>([]);
-    const [newEquipment, setNewEquipment] = useState<Equipments>(initializeEquipmment());
     //Loader & Error
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -125,15 +124,21 @@ export default function EquiposTecnologicosPage() {
             setError(false)
             console.error('Error al cargar los equipos tecnologicos', error)
         })
+
+
     }, []);
 
     //Logic for a create new equipment
-    const handleAddEquipment = () => {
-        const newId = equipments.length + 1;
-        const nuevoEquipoTecnologico = { ...newEquipment, id: newId.toString() };
-        setEquipments([...equipments, nuevoEquipoTecnologico]);
-        setNewEquipment(initializeEquipmment());
+    const handleAddEquipment = (newEquipment: Equipments) => {
+
+        createEquipment(newEquipment).then((response) => {
+            setEquipments([...equipments, newEquipment]);
+        }).catch((error) => {
+            console.log(error)
+        })
+
     };
+
     const [value, setValue] = React.useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -170,7 +175,9 @@ export default function EquiposTecnologicosPage() {
                 <SnackBar notificationOpen={notificationOpen} notificationMessage={notificationMessage} setNotificationOpen={setNotificationOpen} notificationSeverity={notificationSeverity} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1} >
-                <AddEquipment newEquipment={newEquipment} handleAddEquipment={handleAddEquipment} setNewEquipment={setNewEquipment} />
+                <AddEquipment handleAddEquipment={handleAddEquipment} openNotification={openNotification} />
+                <SnackBar notificationOpen={notificationOpen} notificationMessage={notificationMessage} setNotificationOpen={setNotificationOpen} notificationSeverity={notificationSeverity} />
+
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2} >
                 <h2>Buscar equipo</h2>

@@ -7,6 +7,7 @@ export const initializeEquipmment = (): Equipments => {
         model: '',
         brand: '',
         key: '',
+        serial: '',
         nationalKey: '',
         operative: false,
         CareCenter: {
