@@ -8,8 +8,13 @@ import TableEquipment from '@/components/equipment/TableEquipment';
 import AddEquipment from '@/components/equipment/AddEquipment';
 import ModalDelete from '@/components/equipment/ModalDelete';
 import ModalEdit from '@/components/equipment/ModalEdit';
-import { deleteEquipment, getEquipments, updateEquipment } from '@/utils/equipmentService';
+import { getEquipments, updateEquipment } from '@/utils/equipmentService';
 import SnackBar from '@/components/equipment/SnackBar';
+import { getCareCenters } from '@/utils/carecentersService';
+import ModalEquipment from '@/components/equipment/ModalEquipment';
+import { Equipments } from '@/types/Equipment';
+import Error from '@/components/equipment/Error';
+import { initializeEquipmment } from '@/utils/Equipments/InitializeEquipment';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -17,17 +22,6 @@ interface TabPanelProps {
     value: number;
 }
 
-type Equipments = {
-    id: string;
-    name: string;
-    model: string;
-    brand: string;
-    key: string;
-    nationalKey: string;
-    status: string;
-    centroDeSalud: string;
-    description: string;
-};
 function CustomTabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
@@ -56,46 +50,25 @@ function a11yProps(index: number) {
 }
 
 export default function EquiposTecnologicosPage() {
-
     //Equipments
     const [equipments, setEquipments] = useState<Equipments[]>([]);
-    const [newEquipment, setNewEquipment] = useState<Equipments>({
-        id: '',
-        name: '',
-        model: '',
-        brand: '',
-        key: '',
-        nationalKey: '',
-        status: '',
-        centroDeSalud: '',
-        description: '',
-    });
-
+    const [newEquipment, setNewEquipment] = useState<Equipments>(initializeEquipmment());
     //Loader & Error
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
-
-    //Modal Delete - idEquipment selected - nameEquipment selected
+    //Modal Delete - Modal Edit - Modal Equipment - idEquipment selected - nameEquipment selected
     const [openModalDelete, setOpenModalDelete] = React.useState(false);
     const [openModalEdit, setOpenModalEdit] = React.useState(false);
+    const [openModalEquipment, setOpenModalEquipment] = React.useState(false);
     const [idEquipment, setIdEquipment] = React.useState("");
-    const [equipment, setEquipment] = React.useState({
-        id: '',
-        name: '',
-        model: '',
-        brand: '',
-        key: '',
-        nationalKey: '',
-        status: '',
-        centroDeSalud: '',
-        description: ''
-
-    })
-
+    const [equipment, setEquipment] = React.useState(initializeEquipmment())
     //Notifications 
     const [notificationOpen, setNotificationOpen] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState('');
     const [notificationSeverity, setNotificationSeverity] = useState('success');
+
+    //Care Centers
+    const [careCenters, setCareCenters] = useState([])
 
     const openNotification = (message: string, severity: string) => {
         setNotificationMessage(message);
@@ -106,18 +79,41 @@ export default function EquiposTecnologicosPage() {
     //Functions handlers modalDelete
     const handleOpenModalDelete = (id: string, equipment: Equipments) => {
         setOpenModalDelete(true)
-        setIdEquipment(id)
         setEquipment(equipment)
+        setIdEquipment(id)
     };
-    const handleCloseModalDelete = () => setOpenModalDelete(false);
+    const handleCloseModalDelete = () => {
+        setOpenModalDelete(false)
+        setEquipment(initializeEquipmment())
+        setIdEquipment('')
+    };
 
     //Functions handlers modalEdit
     const handleOpenModalEdit = (id: string, equipment: Equipments) => {
         setOpenModalEdit(true)
-        setIdEquipment(id)
         setEquipment(equipment)
+        setIdEquipment(id)
+        getCareCenters().then((response) => {
+            setCareCenters(response)
+        }).catch((error) => {
+        })
     };
-    const handleCloseModalEdit = () => setOpenModalEdit(false);
+    const handleCloseModalEdit = () => {
+        setOpenModalEdit(false)
+        setEquipment(initializeEquipmment())
+        setIdEquipment('')
+    };
+
+    //Functions handlers modal equipment
+    const handleOpenModalEquipment = (id: string, equipment: Equipments) => {
+        setOpenModalEquipment(true)
+        setIdEquipment(id)
+    };
+    const handleCloseModalEquipment = () => {
+        setOpenModalEquipment(false)
+        setIdEquipment('')
+    };
+
     //UseEffect connect with backend
     useEffect(() => {
         getEquipments().then((response) => {
@@ -131,64 +127,13 @@ export default function EquiposTecnologicosPage() {
         })
     }, []);
 
-
-    //Logic for edit a equipment
-    const handleEdit = (equipoId: string, updatedEquipment: Equipments) => {
-        // Encuentra el equipo correspondiente en el estado actual y actualiza sus datos
-        updateEquipment(equipoId, updatedEquipment).then((response) => {
-            console.log(response)
-            handleCloseModalEdit()
-            openNotification('Equipo editado con éxito', 'success');
-            setEquipments((prevEquipments) => {
-                return prevEquipments.map((equipo) => {
-                    if (equipo.id === equipoId) {
-                        return { ...equipo, ...updatedEquipment };
-                    }
-                    return equipo;
-                });
-
-            });
-        }).catch((error) => {
-            handleCloseModalEdit()
-            openNotification('Error al editar el equipo', 'error');
-        })
-    };
-    //Logic for delete a equipment
-    const handleDelete = (equipoId: string) => {
-        deleteEquipment(equipoId).then((response) => {
-            console.log(response)
-            handleCloseModalDelete()
-            openNotification('Equipo eliminado con éxito', 'success');
-            const updatedEquipments = equipments.filter((equipo) => equipo.id !== equipoId);
-            setEquipments(updatedEquipments);
-        }).catch((error) => {
-            openNotification('Error al eliminar el equipo', 'error');
-            handleCloseModalDelete()
-
-        })
-
-    };
-
     //Logic for a create new equipment
     const handleAddEquipment = () => {
-        console.log("agg")
         const newId = equipments.length + 1;
         const nuevoEquipoTecnologico = { ...newEquipment, id: newId.toString() };
         setEquipments([...equipments, nuevoEquipoTecnologico]);
-        setNewEquipment({
-            id: '',
-            name: '',
-            model: '',
-            brand: '',
-            key: '',
-            nationalKey: '',
-            status: "",
-            centroDeSalud: '',
-            description: '',
-        });
+        setNewEquipment(initializeEquipmment());
     };
-
-
     const [value, setValue] = React.useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -199,6 +144,7 @@ export default function EquiposTecnologicosPage() {
                 <Tabs value={value} onChange={handleChange} centered variant='fullWidth' textColor='primary' indicatorColor="primary">
                     <Tab label="Equipos Tecnologicos" {...a11yProps(0)} />
                     <Tab label="Agregar Equipo" {...a11yProps(1)} />
+                    <Tab label="Buscar Equipo" {...a11yProps(2)} />
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
@@ -210,23 +156,24 @@ export default function EquiposTecnologicosPage() {
                             equipments={equipments}
                             handleOpenModalDelete={handleOpenModalDelete}
                             handleOpenModalEdit={handleOpenModalEdit}
+                            handleOpenModalEquipment={handleOpenModalEquipment}
                         />
-
                     ) : (
-                        <div className='text-center text-red-500 font-bold mt-4'>
-                            <h1>Hubo un error al cargar los centros de salud</h1>
-                            <p>Por favor, intente mas tarde</p>
-                        </div>
+                        <Error />
                     )
                 )}
-
-                <ModalDelete handleCloseModal={handleCloseModalDelete} open={openModalDelete} equipment={equipment} idEquipment={idEquipment} handleDelete={handleDelete} />
-                <ModalEdit handleCloseModal={handleCloseModalEdit} open={openModalEdit} equipment={equipment} setEquipment={setEquipment} idEquipment={idEquipment} handleEdit={handleEdit} />
+                <ModalEquipment handleCloseModal={handleCloseModalEquipment} open={openModalEquipment} equipment={equipment} idEquipment={idEquipment} setEquipment={setEquipment} />
+                <ModalDelete handleCloseModal={handleCloseModalDelete} open={openModalDelete} equipment={equipment} idEquipment={idEquipment} openNotification={openNotification} setEquipments={setEquipments} equipments={equipments}
+                />
+                <ModalEdit handleCloseModal={handleCloseModalEdit} open={openModalEdit} equipment={equipment} idEquipment={idEquipment} setEquipment={setEquipment} careCenters={careCenters} setEquipments={setEquipments} openNotification={openNotification}
+                />
                 <SnackBar notificationOpen={notificationOpen} notificationMessage={notificationMessage} setNotificationOpen={setNotificationOpen} notificationSeverity={notificationSeverity} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1} >
-
                 <AddEquipment newEquipment={newEquipment} handleAddEquipment={handleAddEquipment} setNewEquipment={setNewEquipment} />
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={2} >
+                <h2>Buscar equipo</h2>
             </CustomTabPanel>
         </Box>
     );

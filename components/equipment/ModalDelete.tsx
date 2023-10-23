@@ -2,30 +2,20 @@ import { Backdrop, Box, Button, Fade, Modal, Typography } from '@mui/material'
 import React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-
-type Equipments = {
-    id: string;
-    name: string;
-    model: string;
-    brand: string;
-    key: string;
-    nationalKey: string;
-    status: string;
-    centroDeSalud: string;
-    description: string;
-};
+import { Equipments } from '@/types/Equipment';
+import { deleteEquipment } from '@/utils/equipmentService';
 
 type Props = {
     handleCloseModal: () => void;
     open: boolean;
     equipment: Equipments;
     idEquipment: string;
-    handleDelete: (id: string) => void;
+    openNotification: (message: string, severity: 'success' | 'error') => void;
+    setEquipments: React.Dispatch<React.SetStateAction<Equipments[]>>;
+    equipments: Equipments[];
 }
 
-
-function ModalDelete({ handleCloseModal, open, equipment, idEquipment, handleDelete }: Props) {
-
+function ModalDelete({ handleCloseModal, open, equipment, idEquipment, openNotification, equipments, setEquipments }: Props) {
     const style = {
         position: 'absolute' as 'absolute',
         top: '50%',
@@ -36,6 +26,20 @@ function ModalDelete({ handleCloseModal, open, equipment, idEquipment, handleDel
         boxShadow: 6,
         p: 3,
 
+    };
+    //Logic for delete a equipment
+    const handleDelete = (equipoId: string) => {
+        deleteEquipment(equipoId).then((response) => {
+            console.log(response)
+            handleCloseModal()
+            openNotification('Equipo eliminado con éxito', 'success');
+            const updatedEquipments = equipments.filter((equipo) => equipo.id !== equipoId);
+            setEquipments(updatedEquipments);
+        }).catch((error) => {
+            openNotification('Error al eliminar el equipo', 'error');
+            handleCloseModal()
+
+        })
     };
     return (
         <Modal

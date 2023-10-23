@@ -35,19 +35,13 @@ function AddEquipement({ setNewEquipment, newEquipment, handleAddEquipment }: Pr
                     onChange={(e) => setNewEquipment({ ...newEquipment, name: e.target.value })}
                 />
 
-                <FormControl variant="outlined" fullWidth>
-                    <InputLabel id="demo-simple-select-outlined-label">Estado</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-outlined-label"
-                        label="Estado"
-                        value={newEquipment.status}
-                        onChange={(e) => setNewEquipment({ ...newEquipment, status: e.target.value })}
-                    >
-                        <MenuItem value="1">Operativo	</MenuItem>
-                        <MenuItem value="2">Inoperativo	</MenuItem>
-
-                    </Select>
-                </FormControl>
+                <TextField
+                    variant="outlined"
+                    label="Marca"
+                    fullWidth
+                    value={newEquipment.brand}
+                    onChange={(e) => setNewEquipment({ ...newEquipment, brand: e.target.value })}
+                />
                 <TextField
                     variant="outlined"
                     label="Modelo"
@@ -55,12 +49,34 @@ function AddEquipement({ setNewEquipment, newEquipment, handleAddEquipment }: Pr
                     value={newEquipment.model}
                     onChange={(e) => setNewEquipment({ ...newEquipment, model: e.target.value })}
                 />
+
                 <TextField
                     variant="outlined"
-                    label="Marca"
+                    label="Descripcion"
                     fullWidth
-                    value={newEquipment.brand}
-                    onChange={(e) => setNewEquipment({ ...newEquipment, brand: e.target.value })}
+                    value={newEquipment.description}
+                    onChange={(e) => setNewEquipment({ ...newEquipment, description: e.target.value })}
+                />
+                <FormControl variant="outlined" fullWidth>
+                    <InputLabel id="demo-simple-select-outlined-label">Operativo</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-outlined-label"
+                        label="Operativo"
+                        value={newEquipment.status}
+                        onChange={(e) => setNewEquipment({ ...newEquipment, status: e.target.value })}
+                    >
+                        <MenuItem value="1">Si	</MenuItem>
+                        <MenuItem value="2">No	</MenuItem>
+
+                    </Select>
+                </FormControl>
+
+                <TextField
+                    variant="outlined"
+                    label="Condicion"
+                    fullWidth
+                    value={newEquipment.condition}
+                    onChange={(e) => setNewEquipment({ ...newEquipment, condition: e.target.value })}
                 />
                 <TextField
                     variant="outlined"
@@ -90,13 +106,23 @@ function AddEquipement({ setNewEquipment, newEquipment, handleAddEquipment }: Pr
                         <MenuItem value="3">HOSPITAL COROMOTO</MenuItem>
                     </Select>
                 </FormControl>
-                <TextField
-                    variant="outlined"
-                    label="Descripcion"
-                    fullWidth
-                    value={newEquipment.description}
-                    onChange={(e) => setNewEquipment({ ...newEquipment, description: e.target.value })}
-                />
+
+                <FormControl variant="outlined" fullWidth>
+                    <InputLabel id="demo-simple-select-outlined-label">Servicio Medico</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-outlined-label"
+                        label="Centro de Salud"
+                        value={newEquipment.centroDeSalud}
+                        onChange={(e) => setNewEquipment({ ...newEquipment, centroDeSalud: e.target.value })}
+                    >
+                        <MenuItem value="1">HOSPITAL GENERAL DEL SUR Dr. PEDRO ITURBE	</MenuItem>
+                        <MenuItem value="2">SERVICIO AUTÓNOMO HOSPITAL UNIVERSITARIO DE MARACAIBO	</MenuItem>
+                        <MenuItem value="3">HOSPITAL COROMOTO</MenuItem>
+                        <MenuItem value="1">HOSPITAL GENERAL DEL SUR Dr. PEDRO ITURBE	</MenuItem>
+                        <MenuItem value="2">SERVICIO AUTÓNOMO HOSPITAL UNIVERSITARIO DE MARACAIBO	</MenuItem>
+                        <MenuItem value="3">HOSPITAL COROMOTO</MenuItem>
+                    </Select>
+                </FormControl>
 
                 <div className="col-span-2 flex space-x-2">
                     <Button

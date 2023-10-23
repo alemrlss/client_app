@@ -1,19 +1,8 @@
-import { Backdrop, Box, Button, Fade, FormControl, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material'
+import { Backdrop, Box, CircularProgress, Fade, Modal, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import DeleteIcon from '@mui/icons-material/Delete';
-import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-
-type Equipments = {
-    id: string;
-    name: string;
-    model: string;
-    brand: string;
-    key: string;
-    nationalKey: string;
-    status: string;
-    centroDeSalud: string;
-    description: string;
-};
+import { getEquipment, updateEquipment } from '@/utils/equipmentService';
+import { Equipments } from '@/types/Equipment';
+import FormEditEquipment from './FormEditEquipment';
 
 type Props = {
     handleCloseModal: () => void;
@@ -21,12 +10,16 @@ type Props = {
     equipment: Equipments;
     setEquipment: React.Dispatch<React.SetStateAction<Equipments>>;
     idEquipment: string;
-    handleEdit: (id: string, updatedEquipements: Equipments) => void;
+    careCenters: any;
+    setEquipments: React.Dispatch<React.SetStateAction<Equipments[]>>;
+    openNotification: (message: string, severity: 'success' | 'error') => void;
+
 }
+function ModalEdit({ handleCloseModal, open, equipment, idEquipment, setEquipment, careCenters, setEquipments, openNotification }: Props) {
+    const [loading, setLoading] = useState(false);
 
 
-function ModalEdit({ handleCloseModal, open, equipment, idEquipment, handleEdit, setEquipment }: Props) {
-
+    const [editedEquipment, setEditedEquipment] = useState(equipment);
 
     const style = {
         position: 'absolute' as 'absolute',
@@ -39,6 +32,53 @@ function ModalEdit({ handleCloseModal, open, equipment, idEquipment, handleEdit,
         p: 3,
 
     };
+    useEffect(() => {
+        if (open) {
+            setLoading(true);
+            getEquipment(idEquipment)
+                .then((response) => {
+                    setEditedEquipment(response); // Inicializar los valores editados con los valores actuales
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    // Manejar errores
+                });
+        }
+    }, [open, idEquipment]);
+
+
+    // Lógica para manejar cambios en el formulario
+    const handleInputChange = (e: any) => {
+        const { name, value } = e.target;
+        setEditedEquipment({
+            ...editedEquipment,
+            [name]: value,
+        });
+    };
+    //Logic for edit a equipment
+    const handleEdit = () => {
+        updateEquipment(idEquipment, editedEquipment)
+            .then(() => {
+                handleCloseModal();
+                openNotification('Equipo editado con éxito', 'success');
+                setEquipments((prevEquipments) => {
+                    return prevEquipments.map((equipment) => {
+                        if (equipment.id === idEquipment) {
+                            console.log("abajo")
+                            return { ...equipment, ...editedEquipment };
+
+                        }
+                        return equipment;
+                    });
+                });
+            })
+            .catch((error) => {
+                handleCloseModal();
+                openNotification('Error al editar el equipo', error);
+            });
+    };
+
+
     return (
         <Modal
             aria-labelledby="transition-modal-title"
@@ -55,100 +95,28 @@ function ModalEdit({ handleCloseModal, open, equipment, idEquipment, handleEdit,
         >
             <Fade in={open}>
                 <Box sx={style}>
-                    <Typography id="transition-modal-title" variant="h6" component="h2" sx={{ textAlign: 'center' }}>
-
-                        Editar Equipo Tecnologico
-                    </Typography>
-
-                    <form className="grid grid-cols-2 gap-6 p-4">
-                        <TextField
-                            variant="outlined"
-                            label="Nombre"
-                            fullWidth
-                            value={equipment.name}
-                            onChange={(e) => setEquipment({ ...equipment, name: e.target.value })}
-                        />
-                        <FormControl variant="outlined" fullWidth>
-                            <InputLabel id="demo-simple-select-outlined-label">Estado</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-outlined-label"
-                                label="Estado"
-                                value={equipment.status}
-                                onChange={(e) => setEquipment({ ...equipment, status: e.target.value })}
-                            >
-                                <MenuItem value="operative">Operativo	</MenuItem>
-                                <MenuItem value="inoperative">Inoperativo	</MenuItem>
-
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            variant="outlined"
-                            label="Modelo"
-                            fullWidth
-                            value={equipment.model}
-                            onChange={(e) => setEquipment({ ...equipment, model: e.target.value })}
-                        />
-                        <TextField
-                            variant="outlined"
-                            label="Marca"
-                            fullWidth
-                            value={equipment.brand}
-                            onChange={(e) => setEquipment({ ...equipment, brand: e.target.value })}
-                        />
-                        <TextField
-                            variant="outlined"
-                            label="Serial"
-                            fullWidth
-                            value={equipment.key}
-                            onChange={(e) => setEquipment({ ...equipment, key: e.target.value })}
-                        />
-                        <TextField
-                            variant="outlined"
-                            label="Bien Nacional"
-                            fullWidth
-                            value={equipment.nationalKey}
-                            onChange={(e) => setEquipment({ ...equipment, nationalKey: e.target.value })}
-                        />
-
-                        <FormControl variant="outlined" fullWidth>
-                            <InputLabel id="demo-simple-select-outlined-label">Centro de Salud</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-outlined-label"
-                                label="Centro de Salud"
-                                value={equipment.centroDeSalud}
-                                onChange={(e) => setEquipment({ ...equipment, centroDeSalud: e.target.value })}
-                            >
-                                <MenuItem value="1">HOSPITAL GENERAL DEL SUR Dr. PEDRO ITURBE	</MenuItem>
-                                <MenuItem value="2">SERVICIO AUTÓNOMO HOSPITAL UNIVERSITARIO DE MARACAIBO	</MenuItem>
-                                <MenuItem value="3">HOSPITAL COROMOTO</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            variant="outlined"
-                            label="Descripcion"
-                            fullWidth
-                            value={equipment.description}
-                            onChange={(e) => setEquipment({ ...equipment, description: e.target.value })}
-                        />
-
-                    </form>
-
-                    <Box className="space-x-2" sx={{ display: "flex", justifyContent: "center", mt: 1, }}>
-
-                        <Button variant="outlined" startIcon={<CancelPresentationIcon />} onClick={handleCloseModal}>
-                            Cancelar
-                        </Button>
-                        <Button variant="outlined" color="success" onClick={() => {
-                            handleEdit(idEquipment, equipment)
-                        }}
-                            startIcon={<DeleteIcon />}>
-                            Guardar
-                        </Button>
-                    </Box>
+                    {loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', m: 2 }}>
+                            <CircularProgress color='primary' />
+                        </Box>
+                    ) : (
+                        <Box>
+                            <Typography id="transition-modal-title" variant="h6" component="h2" sx={{ textAlign: 'center' }}>
+                                Editar Equipo Tecnologico
+                            </Typography>
+                            <FormEditEquipment
+                                idEquipment={idEquipment}
+                                equipment={editedEquipment} // Usar editedEquipment en lugar de equipment
+                                setEquipment={setEditedEquipment} // Usar setEditedEquipment en lugar de setEquipment
+                                handleEdit={handleEdit}
+                                handleCloseModal={handleCloseModal}
+                                careCenters={careCenters}
+                            />
+                        </Box>
+                    )}
                 </Box>
             </Fade>
-        </Modal>
+        </Modal >
     )
 }
-
 export default ModalEdit

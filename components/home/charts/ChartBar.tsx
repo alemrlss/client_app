@@ -38,9 +38,9 @@ const ChartBar = () => {
             {loading ? (
                 null) : (
                 <Bar data={data}
-                    width={800}
                     height={400}
-                    options={{ maintainAspectRatio: true, plugins: { legend: { display: false } } }} />
+                    width={700}
+                    options={{ responsive: true, plugins: { legend: { display: false } } }} />
             )}
         </div>
     );

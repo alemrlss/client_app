@@ -67,7 +67,7 @@ export default function CentrosDeSaludPage() {
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/careCenter`)
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carecenters`)
             .then((response) => {
                 setCareCenters(response.data);
                 setIsLoading(false);
