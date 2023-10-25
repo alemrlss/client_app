@@ -15,6 +15,7 @@ import ModalEquipment from '@/components/equipment/ModalEquipment';
 import { Equipments } from '@/types/Equipment';
 import Error from '@/components/equipment/Error';
 import { initializeEquipmment } from '@/utils/Equipments/InitializeEquipment';
+import { Pagination } from '@mui/material';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -69,6 +70,12 @@ export default function EquiposTecnologicosPage() {
     //Care Centers
     const [careCenters, setCareCenters] = useState([])
 
+
+    //Pagination 
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+
     const openNotification = (message: string, severity: string) => {
         setNotificationMessage(message);
         setNotificationSeverity(severity);
@@ -113,30 +120,42 @@ export default function EquiposTecnologicosPage() {
         setIdEquipment('')
     };
 
+
+    const totalItems = 40
     //UseEffect connect with backend
     useEffect(() => {
-        getEquipments().then((response) => {
-            setEquipments(response)
-            setIsLoading(false)
-            setError(true)
-        }).catch((error) => {
-            setIsLoading(false)
-            setError(false)
-            console.error('Error al cargar los equipos tecnologicos', error)
-        })
+        const take = 7;
+        const skip = (page - 1) * take;
 
 
-    }, []);
+        console.log(take, skip)
+        getEquipments({ skip, take })
+            .then((response) => {
+                setEquipments(response);
+                setIsLoading(false);
+                setError(true);
+                // Calcula el número total de páginas basado en la respuesta del servidor.
+                const calculatedTotalPages = Math.ceil(totalItems / take);
+                setTotalPages(calculatedTotalPages);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                setError(false);
+                console.error('Error al cargar los equipos tecnológicos', error);
+            });
+    }, [page]);
 
     //Logic for a create new equipment
     const handleAddEquipment = (newEquipment: Equipments) => {
-
         createEquipment(newEquipment).then((response) => {
             setEquipments([...equipments, newEquipment]);
         }).catch((error) => {
             console.log(error)
         })
+    };
 
+    const handlePageChange = (event: any, newPage: any) => {
+        setPage(newPage);
     };
 
     const [value, setValue] = React.useState(0);
@@ -157,17 +176,31 @@ export default function EquiposTecnologicosPage() {
                     <LoaderTables />
                 ) : (
                     (error) ? (
-                        <TableEquipment
-                            equipments={equipments}
-                            handleOpenModalDelete={handleOpenModalDelete}
-                            handleOpenModalEdit={handleOpenModalEdit}
-                            handleOpenModalEquipment={handleOpenModalEquipment}
-                        />
+
+                        <Box className='flex flex-col space-y-4 items-center'>
+                            <TableEquipment
+                                equipments={equipments}
+                                handleOpenModalDelete={handleOpenModalDelete}
+                                handleOpenModalEdit={handleOpenModalEdit}
+                                handleOpenModalEquipment={handleOpenModalEquipment}
+                            />
+                            {/* Renderizar controles de paginación */}
+                            <Pagination
+                                count={totalPages}
+                                page={page}
+                                onChange={handlePageChange}
+                                color="primary"
+                            />
+                        </Box>
+
                     ) : (
                         <Error />
                     )
                 )}
-                <ModalEquipment handleCloseModal={handleCloseModalEquipment} open={openModalEquipment} equipment={equipment} idEquipment={idEquipment} setEquipment={setEquipment} />
+                <ModalEquipment
+                handleCloseModal={handleCloseModalEquipment}
+                open={openModalEquipment} equipment={equipment}
+                idEquipment={idEquipment} setEquipment={setEquipment} />
                 <ModalDelete handleCloseModal={handleCloseModalDelete} open={openModalDelete} equipment={equipment} idEquipment={idEquipment} openNotification={openNotification} setEquipments={setEquipments} equipments={equipments}
                 />
                 <ModalEdit handleCloseModal={handleCloseModalEdit} open={openModalEdit} equipment={equipment} idEquipment={idEquipment} setEquipment={setEquipment} careCenters={careCenters} setEquipments={setEquipments} openNotification={openNotification}
@@ -177,11 +210,10 @@ export default function EquiposTecnologicosPage() {
             <CustomTabPanel value={value} index={1} >
                 <AddEquipment handleAddEquipment={handleAddEquipment} openNotification={openNotification} />
                 <SnackBar notificationOpen={notificationOpen} notificationMessage={notificationMessage} setNotificationOpen={setNotificationOpen} notificationSeverity={notificationSeverity} />
-
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2} >
                 <h2>Buscar equipo</h2>
             </CustomTabPanel>
-        </Box>
+        </Box >
     );
 }

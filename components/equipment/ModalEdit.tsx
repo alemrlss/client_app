@@ -64,7 +64,6 @@ function ModalEdit({ handleCloseModal, open, equipment, idEquipment, setEquipmen
                 setEquipments((prevEquipments) => {
                     return prevEquipments.map((equipment) => {
                         if (equipment.id === idEquipment) {
-                            console.log("abajo")
                             return { ...equipment, ...editedEquipment };
 
                         }

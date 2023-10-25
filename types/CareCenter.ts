@@ -1,10 +1,15 @@
-export interface CareCenter {
+export type CareCenter = {
   id: string;
   name: string;
   tipo: string;
-  municipio: string;
-  direccion: string;
+  municipality: {
+    name: string;
+  };
+  address: string;
   director: string;
   typeCenter: number;
-  telefonoResponsable: string;
-}
+  phoneNumber: string;
+  State: {
+    name: string;
+  };
+};

@@ -3,9 +3,16 @@ import { Equipments } from "@/types/Equipment";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export const getEquipments = async () => {
+interface PaginationParams {
+  skip: number;
+  take: number;
+}
+export const getEquipments = async ({ skip, take }: PaginationParams) => {
   try {
-    const response = await axios.get(`${BASE_URL}/equipments`);
+    const response = await axios.get(
+      `${BASE_URL}/equipments?skip=${skip}&take=${take}`
+    );
+    console.log(response.data)
     return response.data;
   } catch (error) {
     throw error;

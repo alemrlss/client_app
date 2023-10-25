@@ -1,63 +1,62 @@
-"use client"
-import React from 'react'
+import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-type CentroDeSalud = {
-    id: string;
-    name: string;
-    tipo: string;
-    municipio: string;
-    direccion: string;
-    director: string;
-    typeCenter: number;
-    telefonoResponsable: string;
-};
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { CareCenter } from '@/types/CareCenter';
+import AddCommentIcon from '@mui/icons-material/AddComment';
+
 type Props = {
-    careCenters: CentroDeSalud[];
+    careCenters: CareCenter[];
     handleEdit: (id: string) => void;
     handleDelete: (id: string) => void;
-}
+    handleOpenModalCareCenter: (id: string) => void;
+};
 
-function TableCareCenter({ careCenters, handleEdit, handleDelete }: Props) {
+function TableCareCenter({ careCenters, handleEdit, handleDelete, handleOpenModalCareCenter }: Props) {
     return (
-        <table className="w-full border-collapse border border-gray-300 text-sm">
-            <thead>
-                <tr className="bg-gray-100">
-                    <th className="border p-2">Nombre</th>
-                    <th className="border p-2">Tipo</th>
-                    <th className="border p-2">Municipio</th>
-                    <th className="border p-2">Dirección</th>
-                    <th className="border p-2">Director</th>
-                    <th className="border p-2">Teléfono del Responsable</th>
-                    <th className="border p-2">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {careCenters.map((center) => (
-                    <tr key={center.id} className='text-center'>
-                        <td className="border p-2 text-xs">{center.name}</td>
-                        <td className="border p-2">{center.typeCenter}</td>
-                        <td className="border p-2">{center.municipio}</td>
-                        <td className="border p-2">{center.direccion}</td>
-                        <td className="border p-2">{center.director ? center.director : 'NO ASIGNADO'}</td>
-                        <td className="border p-2">{center.telefonoResponsable}</td>
-                        <td className="border p-2">
+        <TableContainer component={Paper}>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell sx={{ width: '20%' }}>Nombre</TableCell>
+                        <TableCell sx={{ width: '5%' }}>Tipo</TableCell>
+                        <TableCell sx={{ width: '10%' }}>Director</TableCell>
+                        <TableCell sx={{ width: '10%' }}>Estado</TableCell>
+                        <TableCell sx={{ width: '10%' }}>Acciones</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {careCenters.map((center) => (
+                        <TableRow key={center.id}>
+                            <TableCell>{center.name}</TableCell>
+                            <TableCell>{center.typeCenter}</TableCell>
+                            <TableCell>{center.director ? center.director : 'NO ASIGNADO'}</TableCell>
+                            <TableCell>{center.State.name}</TableCell>
+                            <TableCell>
+                                <IconButton color='primary' aria-label="info"
+                                    onClick={() => {
+                                        //handleOpenModalEquipment(equipment.id, equipment)
+                                        console.log(center.id)
 
-                            <IconButton color='primary' aria-label="delete" size="large" onClick={() => handleEdit(center.id)}
-                            >
-                                <ModeEditIcon />
-                            </IconButton>
-                            <IconButton color='error' aria-label="delete" size="large" onClick={() => handleDelete(center.id)}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    )
+                                        handleOpenModalCareCenter(center.id)
+
+                                    }}>
+                                    <AddCommentIcon sx={{ color: 'gray' }} />
+                                </IconButton>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
 }
 
-export default TableCareCenter
+export default TableCareCenter;

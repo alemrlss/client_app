@@ -17,3 +17,12 @@ export const getCareCenters = async () => {
     throw error;
   }
 };
+
+export const getCareCenter = async (id: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/carecenters/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

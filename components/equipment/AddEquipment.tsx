@@ -6,7 +6,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Equipments } from '@/types/Equipment';
 import { initializeEquipmment } from '@/utils/Equipments/InitializeEquipment';
 import { getCareCenters } from '@/utils/carecentersService';
-import { CircularProgress, } from '@mui/material'
+import LoaderForm from '../Loaders/LoaderForm';
 
 type Props = {
     handleAddEquipment: (newEquipment: any) => void;
@@ -20,10 +20,11 @@ function AddEquipement({ handleAddEquipment, openNotification }: Props) {
     const [newEquipment, setNewEquipment] = useState<Equipments>(initializeEquipmment());
     const [careCenters, setCareCenters] = useState([])
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string>('');
 
     const handleLimpiarDatos = () => {
-        console.log('limpia los datos ')
+        setNewEquipment(initializeEquipmment());
+        // Opcional: Puedes establecer clearData en false si no deseas limpiar los campos nuevamente después de limpiar.
+        openNotification("Datos limpiados", "success");
     };
 
 
@@ -40,9 +41,7 @@ function AddEquipement({ handleAddEquipment, openNotification }: Props) {
     return (
         <div className="bg-white rounded-md shadow-md p-4">
             {loading ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', m: 2 }}>
-                    <CircularProgress color='primary' />
-                </Box>
+                <LoaderForm />
             ) : (
 
                 <Box>
@@ -150,11 +149,26 @@ function AddEquipement({ handleAddEquipment, openNotification }: Props) {
                                 variant="contained"
                                 endIcon={<AccessTimeFilledIcon />}
                                 onClick={() => {
-                                    openNotification('fdsfds', 'error')
+                                    if (
+                                        !newEquipment.name &&
+                                        !newEquipment.brand &&
+                                        !newEquipment.model &&
+                                        !newEquipment.description &&
+                                        !newEquipment.condition &&
+                                        !newEquipment.serial &&
+                                        !newEquipment.nationalKey &&
+                                        !newEquipment.key &&
+                                        !newEquipment.CareCenterId
+                                    ) {
+                                        openNotification('Los datos ya están limpios', 'error');
+                                    } else {
+                                        handleLimpiarDatos();
+                                    }
                                 }}
                             >
                                 Limpiar Datos
                             </Button>
+
                             <Button
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                 sx={{ width: '100%' }}
@@ -172,8 +186,7 @@ function AddEquipement({ handleAddEquipment, openNotification }: Props) {
                                     ) {
                                         openNotification('Debes rellenar todos los campos', 'error');
                                     } else {
-                                        // Restablece el mensaje de error
-                                        setError('');
+
                                         // Agrega el equipo
                                         handleAddEquipment(newEquipment);
                                         openNotification('Equipo registrado con éxito', 'success');
@@ -185,11 +198,7 @@ function AddEquipement({ handleAddEquipment, openNotification }: Props) {
                                 Agregar
                             </Button>
                         </div>
-                        {error && (
-                            <div className="text-red-500 text-center my-2">
-                                {error}
-                            </div>
-                        )}
+
                     </form>
                 </Box>
             )}
