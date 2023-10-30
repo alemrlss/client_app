@@ -3,15 +3,15 @@ import React, { useState } from "react";
 import { BsBoxArrowRight } from "react-icons/bs";
 import { MdClose } from "react-icons/md";
 import sidebarSections from "@/data/sidebarSections";
-import Link from "next/link";
 import sidebarBackgroundImage from "@/public/images/sidebar/sidebarBackground.png";
 import Image from "next/image";
 import profileDefault from "@/public/images/sidebar/default-profile.png";
-import { usePathname } from 'next/navigation'; 
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const Sidebar = () => {
-  const pathname = usePathname(); 
-
+  const pathname = usePathname();
+  const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeSection, setActiveSection] = useState(pathname);
 
@@ -61,7 +61,7 @@ const Sidebar = () => {
               height={140}
             />
             <p className="text-center text-sm">Gerente</p>
-            <p className="text-center text-base pb-1">Jissel Ortega</p>
+            <p className="text-center text-base pb-1">Jose Manuel Gonzalez</p>
           </div>
         </div>
       )}
@@ -77,10 +77,11 @@ const Sidebar = () => {
           }`}
       >
         {sidebarSections.map((section) => (
-          <Link href={`${section.id}`} key={section.id} className={`mx-2 p-2 text-lg font-semibold cursor-pointer 
+          <a href={`${section.id}`} key={section.id} className={`mx-2 p-2 text-lg font-semibold cursor-pointer 
           flex 
           ${activeSection === section.id ? `${activeColor} ${hoverActiveColor}` : hoverInactiveColor}`}
             onClick={() => {
+              router.push(section.id);
               handleSectionClick(section.id);
             }}>
             <li
@@ -95,7 +96,7 @@ const Sidebar = () => {
                 </span>
               )}
             </li>
-          </Link>
+          </a>
         ))}
       </ul>
     </aside>

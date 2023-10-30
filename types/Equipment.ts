@@ -11,6 +11,7 @@ export interface Equipments {
     name: string;
   };
   MedicalService: {
+    id: string;
     service: string;
     floor: number;
   };

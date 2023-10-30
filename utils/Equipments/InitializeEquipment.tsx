@@ -14,6 +14,7 @@ export const initializeEquipmment = (): Equipments => {
             name: ''
         },
         MedicalService: {
+            id: '',
             service: '',
             floor: 0,
         },

@@ -12,7 +12,6 @@ export const getEquipments = async ({ skip, take }: PaginationParams) => {
     const response = await axios.get(
       `${BASE_URL}/equipments?skip=${skip}&take=${take}`
     );
-    console.log(response.data)
     return response.data;
   } catch (error) {
     throw error;
@@ -40,11 +39,9 @@ export const createEquipment = async (
 
   delete dataToSend.CareCenter;
   delete dataToSend.MedicalService;
-  dataToSend.MedicalServiceId = "25faee94-1eaa-4e3b-96ed-a717d04edc66";
   delete dataToSend.Repairs;
 
   try {
-    console.log(dataToSend);
     const response = await axios.post(`${BASE_URL}/equipments`, dataToSend);
     console.log(response.data);
     return response.data;
@@ -57,7 +54,6 @@ export const updateEquipment = async (
   id: string,
   updatedData: Partial<Equipments>
 ) => {
-  // Crear una copia de updatedData
   const dataToSend = { ...updatedData };
 
   if (dataToSend.hasOwnProperty("id")) {
@@ -65,7 +61,6 @@ export const updateEquipment = async (
   }
   delete dataToSend.CareCenter;
   delete dataToSend.MedicalService;
-  dataToSend.MedicalServiceId = "25faee94-1eaa-4e3b-96ed-a717d04edc66";
   delete dataToSend.Repairs;
 
   try {

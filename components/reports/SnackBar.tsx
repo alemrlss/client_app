@@ -19,7 +19,7 @@ function SnackBar({ notificationOpen, notificationMessage, setNotificationOpen, 
             className='text-2xl'
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             open={notificationOpen}
-            autoHideDuration={3000}
+            autoHideDuration={2500}
             onClose={() => setNotificationOpen(false)}
         >
             <SnackbarContent

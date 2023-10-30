@@ -16,6 +16,7 @@ import { Equipments } from '@/types/Equipment';
 import Error from '@/components/equipment/Error';
 import { initializeEquipmment } from '@/utils/Equipments/InitializeEquipment';
 import { Pagination } from '@mui/material';
+import SearchEquipments from '@/components/equipment/SearchEquipments';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -121,21 +122,17 @@ export default function EquiposTecnologicosPage() {
     };
 
 
-    const totalItems = 40
     //UseEffect connect with backend
     useEffect(() => {
         const take = 7;
         const skip = (page - 1) * take;
-
-
-        console.log(take, skip)
         getEquipments({ skip, take })
             .then((response) => {
-                setEquipments(response);
+                setEquipments(response.equipments);
                 setIsLoading(false);
                 setError(true);
                 // Calcula el número total de páginas basado en la respuesta del servidor.
-                const calculatedTotalPages = Math.ceil(totalItems / take);
+                const calculatedTotalPages = Math.ceil(response.totalEquipments / take);
                 setTotalPages(calculatedTotalPages);
             })
             .catch((error) => {
@@ -148,10 +145,19 @@ export default function EquiposTecnologicosPage() {
     //Logic for a create new equipment
     const handleAddEquipment = (newEquipment: Equipments) => {
         createEquipment(newEquipment).then((response) => {
-            setEquipments([...equipments, newEquipment]);
+            newEquipment.id = response.id;
+            if (equipments.length >= 7) {
+                const updatedEquipments = [...equipments];
+                updatedEquipments.shift();
+                updatedEquipments.push(newEquipment);
+                setEquipments(updatedEquipments);
+            } else {
+                setEquipments([...equipments, newEquipment]);
+            }
+            openNotification('Equipo creado correctamente', 'success');
         }).catch((error) => {
-            console.log(error)
-        })
+            console.log(error);
+        });
     };
 
     const handlePageChange = (event: any, newPage: any) => {
@@ -184,7 +190,6 @@ export default function EquiposTecnologicosPage() {
                                 handleOpenModalEdit={handleOpenModalEdit}
                                 handleOpenModalEquipment={handleOpenModalEquipment}
                             />
-                            {/* Renderizar controles de paginación */}
                             <Pagination
                                 count={totalPages}
                                 page={page}
@@ -198,9 +203,9 @@ export default function EquiposTecnologicosPage() {
                     )
                 )}
                 <ModalEquipment
-                handleCloseModal={handleCloseModalEquipment}
-                open={openModalEquipment} equipment={equipment}
-                idEquipment={idEquipment} setEquipment={setEquipment} />
+                    handleCloseModal={handleCloseModalEquipment}
+                    open={openModalEquipment} equipment={equipment}
+                    idEquipment={idEquipment} setEquipment={setEquipment} />
                 <ModalDelete handleCloseModal={handleCloseModalDelete} open={openModalDelete} equipment={equipment} idEquipment={idEquipment} openNotification={openNotification} setEquipments={setEquipments} equipments={equipments}
                 />
                 <ModalEdit handleCloseModal={handleCloseModalEdit} open={openModalEdit} equipment={equipment} idEquipment={idEquipment} setEquipment={setEquipment} careCenters={careCenters} setEquipments={setEquipments} openNotification={openNotification}
@@ -212,7 +217,7 @@ export default function EquiposTecnologicosPage() {
                 <SnackBar notificationOpen={notificationOpen} notificationMessage={notificationMessage} setNotificationOpen={setNotificationOpen} notificationSeverity={notificationSeverity} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2} >
-                <h2>Buscar equipo</h2>
+                <SearchEquipments />
             </CustomTabPanel>
         </Box >
     );

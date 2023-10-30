@@ -1,5 +1,5 @@
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 
@@ -9,10 +9,16 @@ type Props = {
     setEquipment: any,
     handleEdit: (id: string, equipment: any) => void,
     handleCloseModal: () => void,
-    careCenters: any
+    careCenters: any,
+    medicalServices: any,
+    loadingMedicalServices: boolean,
+    loadMedicalServices: (CareCenterid: string) => void
 }
 
-function FormEditEquipment({ idEquipment, equipment, setEquipment, handleEdit, handleCloseModal, careCenters }: Props) {
+function FormEditEquipment({ idEquipment, equipment, setEquipment, handleEdit, handleCloseModal, careCenters, medicalServices, loadingMedicalServices, loadMedicalServices }: Props) {
+
+
+
     return (
         <form className="grid grid-cols-2 gap-6 p-4">
             {/* Nombre del Equipo */}
@@ -106,11 +112,15 @@ function FormEditEquipment({ idEquipment, equipment, setEquipment, handleEdit, h
                     label="Centro de Salud"
                     value={`${equipment.CareCenter?.name}`}
                     onChange={(e) => {
-                        equipment.CareCenter.name = e.target.value as string
+                        const selectedCenterName = e.target.value as string;
+                        const selectedCenter = careCenters.find((center: { id: string, name: string }) => center.name === selectedCenterName);
                         setEquipment({
-                            ...equipment, CareCenterId: careCenters.find((center: { id: string, name: string }) => center.name === e.target.value)?.id
+                            ...equipment, CareCenterId: selectedCenter.id,
+                            CareCenter: selectedCenter
                         })
+                        loadMedicalServices(selectedCenter.id)
                     }
+
                     }
                 >
                     {careCenters.map((center: { id: string, name: string }) => (
@@ -127,22 +137,34 @@ function FormEditEquipment({ idEquipment, equipment, setEquipment, handleEdit, h
                 <Select
                     labelId="demo-simple-select-outlined-label"
                     label="Servicio Medico"
-                    value={`${equipment.CareCenter?.name}`}
+                    value={equipment.MedicalService?.service || ''}
                     onChange={(e) => {
-                        equipment.CareCenter.name = e.target.value as string
+                        const selectedMedicalServiceName = e.target.value as string;
+                        const selectedMedicalService = medicalServices.find((medicalService: { id: string, service: string }) => medicalService.service === selectedMedicalServiceName);
                         setEquipment({
-                            ...equipment, CareCenterId: careCenters.find((center: { id: string, name: string }) => center.name === e.target.value)?.id
+                            ...equipment, MedicalServiceId: selectedMedicalService.id,
+                            MedicalService: selectedMedicalService
                         })
-                    }
-                    }
+                    }}
                 >
-                    {careCenters.map((center: { id: string, name: string }) => (
-                        <MenuItem key={center.id} value={center.name}>
-                            {center.name}
+                    {medicalServices.length === 0 ? (
+                        <MenuItem value="" disabled>
+                            Sin servicios medicos
                         </MenuItem>
-                    ))}
+                    ) : loadingMedicalServices ? (
+                        <MenuItem value="" disabled>
+                            Cargando servicios médicos...
+                        </MenuItem>
+                    ) : (
+                        medicalServices.map((medicalService: { id: string, service: string }) => (
+                            <MenuItem key={medicalService.id} value={medicalService.service}>
+                                {medicalService.service}
+                            </MenuItem>
+                        ))
+                    )}
                 </Select>
             </FormControl>
+
 
             {/* Botones */}
             <div className="space-x-2 col-span-2 flex justify-center">

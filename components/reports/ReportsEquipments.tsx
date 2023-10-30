@@ -1,58 +1,100 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Switch from '@mui/material/Switch';
 import Select from '@mui/material/Select';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
-import { Box, FormControl, InputLabel, MenuItem } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Snackbar } from '@mui/material';
 import GetAppIcon from '@mui/icons-material/GetApp';
+import { getReport } from '@/utils/Reports/getReport';
+import SnackBar from './SnackBar';
+import { getCareCenters } from '@/utils/carecentersService';
 
 function ReportsEquipments() {
+  const [centrosDeSalud, setCentrosDeSalud] = useState([]);
+
+
+  useEffect(() => {
+    // Cargar la lista de centros de salud cuando el componente se monte
+    getCareCenters()
+      .then((centros) => {
+        setCentrosDeSalud(centros);
+      })
+      .catch((error) => {
+        // Manejar errores, por ejemplo, mostrando una notificación
+        console.error('Error al cargar la lista de centros de salud', error);
+      });
+  }, []);
+
+  //Reinicio del formulario
+  const resetForm = () => {
+    setFilterNameEnable(false);
+    setFilterBrandEnable(false);
+    setFilterCareCenterEnable(false);
+    setFilterStatusEnable(false);
+    setName('');
+    setBrand('');
+    setCareCenter('default');
+  };
+
+  //Notificaciones
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+
+  //Estados de el formulario
   const [name, setName] = useState('');
-  const [brand, setBrand] = useState('default');
+  const [brand, setBrand] = useState('');
   const [careCenter, setCareCenter] = useState('default');
   const [operative, setOperative] = useState(false);
   const [filterNameEnable, setFilterNameEnable] = useState(false);
   const [filterBrandEnable, setFilterBrandEnable] = useState(false);
   const [filterCareCenterEnable, setFilterCareCenterEnable] = useState(false);
   const [filterStatusEnable, setFilterStatusEnable] = useState(false);
-  const [errors, setErrors] = useState({});
 
-
+  //Genera informe
   const handleGenerarInforme = () => {
-    const newErrors = {}; // Objeto para almacenar los errores
-
-    if (filterNameEnable && name.trim() === '') {
-      newErrors.name = 'El campo Nombre no puede estar vacío.';
+    const filters: { name?: string, brand?: string, CareCenterId?: string, operative?: string } = {};
+    if (filterNameEnable && name.trim() !== '') {
+      filters.name = name;
     }
-
-    if (filterCareCenterEnable && careCenter === 'default') {
-      newErrors.careCenter = 'Por favor, seleccione un Centro de Salud.';
+    if (filterBrandEnable && brand.trim() !== '') {
+      filters.brand = brand;
     }
-
-    if (filterBrandEnable && brand === 'default') {
-      newErrors.brand = 'Por favor, seleccione una Marca.';
+    if (filterCareCenterEnable && careCenter !== 'default') {
+      filters.CareCenterId = careCenter;
     }
-
-    // Verificar si hay errores
-    if (Object.keys(newErrors).length > 0) {
-      // Mostrar los errores
-      setErrors(newErrors);
-    } else {
-      // Si no hay errores, continuar con la generación del informe
-      const filters = {
-        name: filterNameEnable ? name : null,
-        brand: filterBrandEnable ? brand : null,
-        careCenter: filterCareCenterEnable ? careCenter : null,
-        operative: filterStatusEnable ? operative : null,
-      };
-
-      console.log('Esto es lo que se va a enviar al backend', filters);
-
-      // Limpiar los errores
-      setErrors({});
+    if (filterStatusEnable) {
+      filters.operative = operative.toString();
     }
+    const queryParams = new URLSearchParams(filters as Record<string, string>).toString();
+    console.log("El QueryParams es: ", queryParams)
+    getReport(queryParams)
+      .then((response) => {
+        if (response.file) {
+          // Éxito: Archivo descargado
+          setSnackbarSeverity('success');
+          setSnackbarMessage('Informe generado y archivo descargado con éxito');
+          resetForm();
+        } else {
+          // Error: No se descargó el archivo
+          setSnackbarSeverity('error');
+          setSnackbarMessage('Error al generar el informe');
+          resetForm();
+
+        }
+        setSnackbarOpen(true);
+      })
+      .catch((error) => {
+        setSnackbarSeverity('error');
+        setSnackbarMessage('Error en la petición al servidor');
+        setSnackbarOpen(true);
+      });
+
+
   };
+
 
 
   return (
@@ -152,16 +194,18 @@ function ReportsEquipments() {
                 disabled={!filterCareCenterEnable}
               >
                 <MenuItem value="default">Seleccione un centro de salud</MenuItem>
-                <MenuItem value="Centro1">Centro 1</MenuItem>
-                <MenuItem value="Centro2">Centro 2</MenuItem>
-                <MenuItem value="Centro3">Centro 3</MenuItem>
+                {centrosDeSalud.map((centro) => (
+                  <MenuItem key={centro.id} value={centro.id}>
+                    {centro.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </div>
         </Box>
 
-        <Box className="flex items-center space-x-2">
-          <div className="w-2/6 bg-gray-200 p-1 rounded">
+        <Box className="flex items-center justify-between space-x-2">
+          <div className="w-2/6 bg-gray-200 rounded py-2 px-1">
             <label className="m-1">
               Marca
             </label>
@@ -170,27 +214,17 @@ function ReportsEquipments() {
               onChange={() => setFilterBrandEnable(!filterBrandEnable)}
             />
           </div>
-          <div className=" w-4/6">
-            <FormControl variant="standard" fullWidth>
-              <InputLabel id="marca-select-label">Marca</InputLabel>
-              <Select
-                labelId="marca-select-label"
-                label="Marca"
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-                disabled={!filterBrandEnable}
-              >
-                <MenuItem value="default">Seleccione una Marca</MenuItem>
-                <MenuItem value="Maracaibo">Maracaibo</MenuItem>
-                <MenuItem value="San Francisco">San Francisco</MenuItem>
-                <MenuItem value="Ciudad Ojeda">Ciudad Ojeda</MenuItem>
-              </Select>
-            </FormControl>
+          <div className="w-4/6  ">
+            <Input
+              placeholder="Nombre de la marca.. Ej: Meheco"
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
+              disabled={!filterBrandEnable}
+              className='w-full'
+            />
           </div>
         </Box>
-        {errors.name && (
-          <p className="text-red-500">{errors.name}</p>
-        )}
+
         <Box className='flex justify-center'>
           <Button
             sx={{ mt: 2 }}
@@ -203,7 +237,9 @@ function ReportsEquipments() {
             Generar Informe
           </Button>
         </Box>
+
       </form>
+      <SnackBar notificationOpen={snackbarOpen} notificationMessage={snackbarMessage} setNotificationOpen={setSnackbarOpen} notificationSeverity={snackbarSeverity} />
     </div>
   );
 }

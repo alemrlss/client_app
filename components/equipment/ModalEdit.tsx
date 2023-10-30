@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { getEquipment, updateEquipment } from '@/utils/equipmentService';
 import { Equipments } from '@/types/Equipment';
 import FormEditEquipment from './FormEditEquipment';
+import { getMedicalServicesByIdCareCenter } from '@/utils/carecentersService';
 
 type Props = {
     handleCloseModal: () => void;
@@ -17,9 +18,10 @@ type Props = {
 }
 function ModalEdit({ handleCloseModal, open, equipment, idEquipment, setEquipment, careCenters, setEquipments, openNotification }: Props) {
     const [loading, setLoading] = useState(false);
-
-
     const [editedEquipment, setEditedEquipment] = useState(equipment);
+
+    const [medicalServices, setMedicalServices] = useState([]);
+    const [loadingMedicalServices, setLoadingMedicalServices] = useState(false)
 
     const style = {
         position: 'absolute' as 'absolute',
@@ -34,11 +36,24 @@ function ModalEdit({ handleCloseModal, open, equipment, idEquipment, setEquipmen
     };
     useEffect(() => {
         if (open) {
+
             setLoading(true);
             getEquipment(idEquipment)
                 .then((response) => {
-                    setEditedEquipment(response); // Inicializar los valores editados con los valores actuales
+                    setEditedEquipment(response);
                     setLoading(false);
+                    if (response.CareCenter.id) {
+                        // Cargar el servicio médico al mismo tiempo que se obtienen los detalles del equipo
+                        setLoadingMedicalServices(true)
+                        getMedicalServicesByIdCareCenter(response.CareCenter.id)
+                            .then((servicesResponse) => {
+                                setMedicalServices(servicesResponse.MedicalService)
+                                setLoadingMedicalServices(false)
+                            })
+                            .catch((error) => {
+                                console.error('Error al cargar los servicios médicos:', error);
+                            });
+                    }
                 })
                 .catch((error) => {
                     // Manejar errores
@@ -46,15 +61,19 @@ function ModalEdit({ handleCloseModal, open, equipment, idEquipment, setEquipmen
         }
     }, [open, idEquipment]);
 
-
-    // Lógica para manejar cambios en el formulario
-    const handleInputChange = (e: any) => {
-        const { name, value } = e.target;
-        setEditedEquipment({
-            ...editedEquipment,
-            [name]: value,
-        });
+    const loadMedicalServices = (careCenterId: string) => {
+        setLoadingMedicalServices(true);
+        getMedicalServicesByIdCareCenter(careCenterId)
+            .then((response) => {
+                setMedicalServices(response.MedicalService);
+                setLoadingMedicalServices(false);
+            })
+            .catch((error) => {
+                console.error('Error al cargar los servicios médicos:', error);
+                setLoadingMedicalServices(false);
+            });
     };
+
     //Logic for edit a equipment
     const handleEdit = () => {
         updateEquipment(idEquipment, editedEquipment)
@@ -110,6 +129,9 @@ function ModalEdit({ handleCloseModal, open, equipment, idEquipment, setEquipmen
                                 handleEdit={handleEdit}
                                 handleCloseModal={handleCloseModal}
                                 careCenters={careCenters}
+                                medicalServices={medicalServices}
+                                loadingMedicalServices={loadingMedicalServices}
+                                loadMedicalServices={loadMedicalServices}
                             />
                         </Box>
                     )}

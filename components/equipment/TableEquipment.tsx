@@ -25,12 +25,12 @@ function TableEquipement({ equipments, handleOpenModalEdit, handleOpenModalDelet
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>VenSalud</TableCell>
-                        <TableCell>Nombre</TableCell>
-                        <TableCell>Marca</TableCell>
-                        <TableCell>Operativo</TableCell>
-                        <TableCell>Centro de Salud</TableCell>
-                        <TableCell>Acciones</TableCell>
+                        <TableCell sx={{ width: '10%' }}>VenSalud</TableCell>
+                        <TableCell sx={{ width: '20%' }}>Nombre</TableCell>
+                        <TableCell sx={{ width: '10%' }}>Marca</TableCell>
+                        <TableCell sx={{ width: '5%' }}>Operativo</TableCell>
+                        <TableCell sx={{ width: '40%' }}>Centro de Salud</TableCell>
+                        <TableCell sx={{ width: '30%' }}>Acciones</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
